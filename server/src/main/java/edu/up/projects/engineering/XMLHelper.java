@@ -57,7 +57,7 @@ public class XMLHelper
         {
             String path = System.getProperty("user.dir");
             File file = new File(path + "/testFile.txt");
-            String content = "hello world";
+            String content = "hello TJ";
             if(!file.exists())
             {
                 file.createNewFile();
