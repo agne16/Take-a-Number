@@ -92,19 +92,37 @@ public class XMLHelper
 
     public void writeFile()
     {
+        int courseID = 777;
+        String courseSection = "A";
+        String courseName = "The Wardening";
+        int labSessionID = 696969; // placeholder data for xml write
+        String [] userIDs = new String [10];
+        int numCheckpoints = 7;
+        for (int x = 0; x < 10; x++)
+        {
+            userIDs[x] = "userID" + x;
+        }
+        boolean passedCheckpoint = false;
+
         try
         {
             String path = System.getProperty("user.dir");
-            File file = new File(path + "/testFile.txt");
-            String content = "hello TJ";
-            String content = "hello nick";
+            File file = new File(path + "/CS" + courseID + courseSection + "-" + courseName + "-" + labSessionID + ".txt");
             if(!file.exists())
             {
                 file.createNewFile();
             }
             FileWriter write = new FileWriter(file.getAbsoluteFile());
             PrintWriter print_line = new PrintWriter(write);
-            print_line.print(content);
+            print_line.print("<?xml version=\"1.0\"?>\n");
+            print_line.print("<Lab sessionID=\"" + labSessionID + "\">\n");
+            for (int x = 0; x < userIDs.length; x++) {
+                print_line.print("\t<student userID=\"" + userIDs[x] + "\">\n");
+                for (int y = 0; y < numCheckpoints; y++)
+                    print_line.print("\t\t<checkpoint" + y + ">" + passedCheckpoint + "</checkpoint" + y + ">\n");
+                print_line.print("\t</student>\n");
+            }
+            print_line.print("</lab>");
             print_line.close();
             write.close();
         }
