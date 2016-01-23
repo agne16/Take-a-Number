@@ -23,14 +23,6 @@ public class CheckpointsActivity extends AppCompatActivity {
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
                   /*
          * AYYYY for these to work, ya gotsta set whatever data you need for the page or something.
@@ -39,7 +31,7 @@ public class CheckpointsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentMain = new Intent(CheckpointsActivity.this,
-                        SetupActivity.class);
+                        MainActivity.class);
                 CheckpointsActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -64,6 +56,8 @@ public class CheckpointsActivity extends AppCompatActivity {
                 Log.i("Content ", " Main layout ");
             }
         });
+
+
     }
 
 }

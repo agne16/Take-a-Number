@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -22,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
 
-        /*
-         * AYYYY for these to work, ya gotsta set whatever data you need for the page or something.
-         */
+
         setupB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,13 +45,56 @@ public class MainActivity extends AppCompatActivity {
         checkpointsB.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                setContentView(R.layout.checkpoints_main);
                 Intent intentMain = new Intent(MainActivity.this ,
                         CheckpointsActivity.class);
                 MainActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
         });
+        //These are buttons specific to this class
+        Button loadSessionButton = (Button) findViewById(R.id.loadSessionButton);
+        Button presetButton = (Button) findViewById(R.id.presetButton);
+        Button createLayoutButton = (Button) findViewById(R.id.createLayoutButton);
+
+
+
+
+        loadSessionButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                EditText sessionIDField = (EditText) findViewById(R.id.sessionID);
+                String sessionID = sessionIDField.getText().toString();
+                moveToImport(sessionID);
+            }
+        });
+
+        presetButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                moveToImport();
+            }
+        });
+
+        createLayoutButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                EditText leftRow = (EditText) findViewById(R.id.leftRowInput);
+                EditText rightRow = (EditText) findViewById(R.id.rightRowInput);
+                EditText leftColumn = (EditText) findViewById(R.id.leftColumnInput);
+                EditText rightColumn = (EditText) findViewById(R.id.rightColumnInput);
+
+                int leftRows = Integer.parseInt(leftRow.getText().toString());
+                int rightRows = Integer.parseInt(rightRow.getText().toString());
+                int leftColumns = Integer.parseInt(leftColumn.getText().toString());
+                int rightColumns = Integer.parseInt(rightColumn.getText().toString());
+
+                int[] layouts = {leftRows, rightRows, leftColumns, rightColumns};
+
+
+                moveToImport(layouts);
+            }
+        });
+
 
 
     }
@@ -76,5 +119,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //if they're loading a sessionID
+    public void moveToImport(String sessionID){
+        Intent intentMain = new Intent(MainActivity.this,
+                ImportActivity.class);
+        intentMain.putExtra("session", sessionID);
+
+        MainActivity.this.startActivity(intentMain);
+        Log.i("Content ", " Main layout ");
+    }
+
+    //if they're creating their own layout
+    public void moveToImport(int[] layouts){
+        Intent intentMain = new Intent(MainActivity.this,
+                ImportActivity.class);
+        intentMain.putExtra("layout", layouts);
+
+        MainActivity.this.startActivity(intentMain);
+        Log.i("Content ", " Main layout ");
+    }
+
+    //if they're using a preset layout
+    public void moveToImport(){
+        Intent intentMain = new Intent(MainActivity.this,
+                ImportActivity.class);
+
+        MainActivity.this.startActivity(intentMain);
+        Log.i("Content ", " Main layout ");
     }
 }

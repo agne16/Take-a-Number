@@ -4,4 +4,5 @@
     <string name="title_activity_queue2">QueueActivity2</string>
     <string name="title_activity_setup">SetupActivity</string>
     <string name="title_activity_checkpoints">CheckpointsActivity</string>
+    <string name="title_activity_import">ImportActivity</string>
 </resources>

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.up.projects.engineering.takeanumberandroid.SetupActivity"
+    tools:context="edu.up.projects.engineering.takeanumberandroid.MainActivity"
     tools:showIn="@layout/activity_setup">
 
     <Button
@@ -66,10 +66,153 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/sessionID"
         android:text="insert here"
         android:layout_alignTop="@+id/idCheckText"
         android:layout_alignLeft="@+id/setupButton"
         android:layout_alignStart="@+id/setupButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOAD"
+        android:id="@+id/loadSessionButton"
+        android:layout_below="@+id/sessionID"
+        android:layout_toRightOf="@+id/idCheckText"
+        android:layout_toEndOf="@+id/idCheckText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pre-Set Layouts"
+        android:id="@+id/presetText"
+        android:layout_marginTop="54dp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:layout_below="@+id/loadSessionButton"
+        android:layout_alignLeft="@+id/idCheckText"
+        android:layout_alignStart="@+id/idCheckText" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shiley 206/249"
+        android:id="@+id/presetButton"
+        android:layout_marginTop="61dp"
+        android:layout_below="@+id/presetText"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_toEndOf="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Create Layout"
+        android:id="@+id/createText"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/presetText"
+        android:layout_alignStart="@+id/presetText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Left Rows:"
+        android:id="@+id/leftRowText"
+        android:layout_marginTop="82dp"
+        android:textSize="20dp"
+        android:layout_below="@+id/createText"
+        android:layout_alignLeft="@+id/createText"
+        android:layout_alignStart="@+id/createText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/leftRowInput"
+        android:text="input left rows here..."
+        android:layout_alignTop="@+id/leftRowText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right Rows:"
+        android:id="@+id/textView"
+        android:textSize="20dp"
+        android:layout_marginTop="37dp"
+        android:layout_below="@+id/leftRowInput"
+        android:layout_alignLeft="@+id/leftRowText"
+        android:layout_alignStart="@+id/leftRowText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/rightRowInput"
+        android:text="input right rows here..."
+        android:layout_alignTop="@+id/textView"
+        android:layout_alignLeft="@+id/leftRowInput"
+        android:layout_alignStart="@+id/leftRowInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Left Columns:"
+        android:id="@+id/textView4"
+        android:textSize="20dp"
+        android:layout_marginTop="39dp"
+        android:layout_below="@+id/rightRowInput"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right Columns:"
+        android:id="@+id/textView5"
+        android:textSize="20dp"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/leftColumnInput"
+        android:text="input left columns here..."
+        android:layout_alignTop="@+id/textView4"
+        android:layout_alignLeft="@+id/rightRowInput"
+        android:layout_alignStart="@+id/rightRowInput" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/rightColumnInput"
+        android:text="input right columns here..."
+        android:layout_alignTop="@+id/textView5"
+        android:layout_alignLeft="@+id/leftColumnInput"
+        android:layout_alignStart="@+id/leftColumnInput" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CREATE"
+        android:id="@+id/createLayoutButton"
+        android:layout_below="@+id/rightColumnInput"
+        android:layout_toRightOf="@+id/createText"
+        android:layout_toEndOf="@+id/createText"
+        android:layout_marginTop="70dp" />
 
 </RelativeLayout>
