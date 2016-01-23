@@ -9,8 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.up.projects.engineering.takeanumberandroid.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="edu.up.projects.engineering.takeanumberandroid.SetupActivity"
+    tools:showIn="@layout/activity_setup">
 
     <Button
         android:layout_width="wrap_content"
@@ -71,4 +71,5 @@
         android:layout_alignTop="@+id/idCheckText"
         android:layout_alignLeft="@+id/setupButton"
         android:layout_alignStart="@+id/setupButton" />
+
 </RelativeLayout>

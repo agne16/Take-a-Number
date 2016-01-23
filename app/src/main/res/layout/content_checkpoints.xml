@@ -9,9 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.up.projects.engineering.takeanumberandroid.MainActivity"
-    tools:showIn="@layout/activity_main">
-
+    tools:context="edu.up.projects.engineering.takeanumberandroid.CheckpointsActivity"
+    tools:showIn="@layout/activity_checkpoints">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,34 +40,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Load Lab Session:"
-        android:id="@+id/loadText"
+        android:text="CHECKS"
+        android:id="@+id/textView2"
         android:layout_below="@+id/queueButton"
-        android:layout_toLeftOf="@+id/queueButton"
-        android:layout_toStartOf="@+id/queueButton"
-        android:layout_marginTop="69dp"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:textSize="30dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="225dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Session ID:"
-        android:id="@+id/idCheckText"
-        android:layout_below="@+id/loadText"
-        android:layout_alignLeft="@+id/loadText"
-        android:layout_alignStart="@+id/loadText"
-        android:layout_marginTop="59dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:text="insert here"
-        android:layout_alignTop="@+id/idCheckText"
-        android:layout_alignLeft="@+id/setupButton"
-        android:layout_alignStart="@+id/setupButton" />
 </RelativeLayout>
