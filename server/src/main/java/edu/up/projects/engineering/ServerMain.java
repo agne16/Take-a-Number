@@ -8,11 +8,6 @@ public class ServerMain
     public static void main(String[] args)
     {
         Server server = new Server();
-        //LabState labState = new LabState();
-
-
         server.runServer();
-
-        System.out.println("Main");
     }
 }

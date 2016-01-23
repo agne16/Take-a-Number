@@ -13,15 +13,22 @@ import java.util.List;
 
 public class XMLHelper
 {
-    public void parseXML(String rootPath, String filename)
+    public boolean parseXML(String rootPath, String filename)
     {
         try
         {
+            //create a file object and make sure it exists
             File file = new File(rootPath + '/' + filename);
-            SAXBuilder saxBuilder = new SAXBuilder();
+            if(!file.exists())
+            {
+                return false
+            }
 
+            //initialize parser and get the first tag of the xml file
+            SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(file);
             Element labState = document.getRootElement();
+
 
             System.out.println("File Type: " + labState.getName());
             System.out.println("Lab ID: " + labState.getAttribute("sessionId").getValue());
@@ -30,6 +37,7 @@ public class XMLHelper
             List<Element> students = labState.getChildren();
 
             System.out.println("----------------------------");
+            //For each student,
             for(Element currentStudent : students)
             {
                 System.out.println("\nStudent: " + currentStudent.getAttribute("userId").getValue());
@@ -49,6 +57,8 @@ public class XMLHelper
         {
             e.printStackTrace();
         }
+
+        return true;
     }
 
     public void writeFile()
@@ -58,6 +68,7 @@ public class XMLHelper
             String path = System.getProperty("user.dir");
             File file = new File(path + "/testFile.txt");
             String content = "hello TJ";
+            String content = "hello nick";
             if(!file.exists())
             {
                 file.createNewFile();
