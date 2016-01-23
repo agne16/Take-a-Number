@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class LabSession
 {
+    private String sessionId;
     private int numCheckpoints;
     private String[] classRoster;
     private boolean[][] checkpoints;
@@ -15,6 +16,12 @@ public class LabSession
         classRoster = initClassRoster;
         checkpoints = new boolean[classRoster.length][numCheckpoints];
     }
+
+    public String getSessionId()
+    {
+        return sessionId;
+    }
+
     public int getNumCheckpoints()
     {
         return numCheckpoints;
