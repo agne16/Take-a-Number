@@ -18,6 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".QueueActivity2"
+            android:label="@string/title_activity_queue2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CheckpointsActivity"
+            android:label="@string/title_activity_checkpoints"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ImportActivity"
+            android:label="@string/title_activity_import"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
