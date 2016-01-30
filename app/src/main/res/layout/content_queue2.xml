@@ -47,4 +47,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="141dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Session ID: 12345"
+        android:id="@+id/textView7"
+        android:layout_below="@+id/setupButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>

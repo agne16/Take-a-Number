@@ -18,6 +18,11 @@ public class QueueActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_queue2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        int[] layoutParams = getIntent().getExtras().getIntArray("layout");
+        if(layoutParams != null){
+            //draw the layout
+            System.out.println(layoutParams);
+        }
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);

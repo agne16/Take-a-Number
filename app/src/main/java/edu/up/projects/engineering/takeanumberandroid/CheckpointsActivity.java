@@ -18,6 +18,8 @@ public class CheckpointsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_checkpoints);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //AYYYY should do saveinstancestate later so we don't have to keep track of this shtuff
+        String roster = getIntent().getExtras().getString("roster");
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
