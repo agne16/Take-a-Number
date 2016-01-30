@@ -25,10 +25,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// NICK TESTING SOCKET STUFF
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import android.app.Activity;
+import android.widget.EditText;
+import android.widget.TextView;
+
 public class ImportActivity extends AppCompatActivity {
     String sessionID;
     int[] layoutParams = new int[4];
     private String content = "";
+
+    // NICK
+    EditText textOut;
+    TextView textIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +51,11 @@ public class ImportActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-
+        // NICK
+        textOut = (EditText)findViewById(R.id.textout);
+        Button buttonSend = (Button)findViewById(R.id.send);
+        textIn = (TextView)findViewById(R.id.textin);
+        buttonSend.setOnClickListener(buttonSendOnClickListener);
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
@@ -163,4 +179,57 @@ public class ImportActivity extends AppCompatActivity {
     }
 
 
+    // NICK
+    //
+    //
+    Button.OnClickListener buttonSendOnClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View arg0) {
+            Socket socket = null;
+            DataOutputStream dataOutputStream = null;
+            DataInputStream dataInputStream = null;
+
+            try {
+                socket = new Socket("192.168.127.1", 8888);
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataInputStream = new DataInputStream(socket.getInputStream());
+                dataOutputStream.writeUTF(textOut.getText().toString());
+                textIn.setText(dataInputStream.readUTF());
+            }
+            catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if (socket != null) {
+                    try {
+                        socket.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (dataOutputStream != null) {
+                    try {
+                        dataOutputStream.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (dataInputStream != null) {
+                    try {
+                        dataInputStream.close();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
 }
