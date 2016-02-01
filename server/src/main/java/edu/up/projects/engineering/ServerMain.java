@@ -1,11 +1,10 @@
 package edu.up.projects.engineering;
 
-/**
- * Created by TJ on 1/21/2016.
- */
+import java.io.IOException;
+
 public class ServerMain
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         Server server = new Server();
         server.runServer();
