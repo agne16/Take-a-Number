@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class QueueActivity2 extends AppCompatActivity {
+    public static int[] layout;
 int[] layoutParams;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,16 +19,14 @@ int[] layoutParams;
         setContentView(R.layout.activity_queue2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        try{
-            layoutParams = getIntent().getExtras().getIntArray("layout");
-        }
-        catch(NullPointerException extraNotSet){
-            //if it's not set, initialize rows and columns to 0
-            layoutParams = new int[4];
-            layoutParams[0] = 0;
-            layoutParams[1] = 0;
-            layoutParams[2] = 0;
-            layoutParams[3] = 0;
+
+
+        if(layout == null){
+            layout = new int[4];
+            layout[0] = 0;
+            layout[1] = 0;
+            layout[2] = 0;
+            layout[3] = 0;
         }
 
 

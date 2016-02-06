@@ -16,19 +16,28 @@ import java.io.File;
 
 public class CheckpointsActivity extends AppCompatActivity {
 
-    static final String STATE_ROSTER = "roster";
+    static String staticRoster;
     public String roster;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
+            QueueActivity2.layout = getIntent().getExtras().getIntArray("layout");
+        }
+        catch (NullPointerException extraNotSet){
+
+        }
 
 
             try{
                 roster = getIntent().getExtras().getString("roster");
+                staticRoster = roster;
             }
             catch(NullPointerException extraNotSet){
-               roster = "";
+               if(roster == null){
+                   roster = "";
+               }
             }
         setContentView(R.layout.activity_checkpoints);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -41,7 +50,7 @@ public class CheckpointsActivity extends AppCompatActivity {
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
         ListView theRoster = (ListView) findViewById(R.id.rosterList);
 
-        String[] rooster = roster.split("\\r?\\n");
+        String[] rooster = staticRoster.split("\\r?\\n");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, rooster);
@@ -84,9 +93,6 @@ public class CheckpointsActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 
 }
