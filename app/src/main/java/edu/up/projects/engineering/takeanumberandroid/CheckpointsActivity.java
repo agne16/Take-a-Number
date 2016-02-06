@@ -8,22 +8,45 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import java.io.File;
 
 public class CheckpointsActivity extends AppCompatActivity {
 
+    static final String STATE_ROSTER = "roster";
+    public String roster;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+            try{
+                roster = getIntent().getExtras().getString("roster");
+            }
+            catch(NullPointerException extraNotSet){
+               roster = "";
+            }
         setContentView(R.layout.activity_checkpoints);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //AYYYY should do saveinstancestate later so we don't have to keep track of this shtuff
-        String roster = getIntent().getExtras().getString("roster");
+
+
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
+        ListView theRoster = (ListView) findViewById(R.id.rosterList);
+
+        String[] rooster = roster.split("\\r?\\n");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, rooster);
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+        theRoster.setAdapter(adapter);
 
 
                   /*
@@ -61,5 +84,9 @@ public class CheckpointsActivity extends AppCompatActivity {
 
 
     }
+
+
+
+
 
 }

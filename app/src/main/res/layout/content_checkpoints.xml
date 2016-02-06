@@ -37,13 +37,14 @@
         android:layout_toRightOf="@+id/queueButton"
         android:layout_toEndOf="@+id/queueButton" />
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHECKS"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/queueButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="225dp" />
+        android:id="@+id/rosterList"
+        android:layout_below="@+id/setupButton"
+        android:layout_toStartOf="@+id/setupButton"
+        android:layout_marginTop="51dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

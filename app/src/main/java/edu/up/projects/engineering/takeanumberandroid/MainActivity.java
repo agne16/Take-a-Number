@@ -71,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
         presetButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                moveToImport();
+                //preset for 206/249
+                int[] layoutParams = new int[4];
+                layoutParams[0] = 5;
+                layoutParams[1] = 5;
+                layoutParams[2] = 4;
+                layoutParams[3] = 3;
+                moveToImport(layoutParams);
             }
         });
 
@@ -83,15 +89,25 @@ public class MainActivity extends AppCompatActivity {
                 EditText leftColumn = (EditText) findViewById(R.id.leftColumnInput);
                 EditText rightColumn = (EditText) findViewById(R.id.rightColumnInput);
 
-                int leftRows = Integer.parseInt(leftRow.getText().toString());
-                int rightRows = Integer.parseInt(rightRow.getText().toString());
-                int leftColumns = Integer.parseInt(leftColumn.getText().toString());
-                int rightColumns = Integer.parseInt(rightColumn.getText().toString());
+                boolean properFormat = true;
+                int leftRows = 0, rightRows = 0, leftColumns = 0, rightColumns = 0;
 
-                int[] layouts = {leftRows, rightRows, leftColumns, rightColumns};
+                try{
+                    leftRows = Integer.parseInt(leftRow.getText().toString());
+                    rightRows = Integer.parseInt(rightRow.getText().toString());
+                    leftColumns = Integer.parseInt(leftColumn.getText().toString());
+                    rightColumns = Integer.parseInt(rightColumn.getText().toString());
+                }
+                catch (Exception invalidInt){
+                    properFormat = false;
+                    // TODO: 2/5/2016  popup dialog box telling them they're bad for leaving a field empty?
+                }
 
+                if(properFormat){
+                    int[] layouts = {leftRows, rightRows, leftColumns, rightColumns};
+                    moveToImport(layouts);
+                }
 
-                moveToImport(layouts);
             }
         });
 

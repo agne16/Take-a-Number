@@ -95,8 +95,21 @@ public class ImportActivity extends AppCompatActivity {
             }
         });
 
-        sessionID = getIntent().getExtras().getString("session");
-        layoutParams = getIntent().getExtras().getIntArray("layout");
+
+        try{
+            sessionID = getIntent().getExtras().getString("session");
+        }
+        catch(NullPointerException notLoadingSession){
+            //TODO generate session ID as though they didn't put in a session id (cause they didn't)
+        }
+
+        try{
+            layoutParams = getIntent().getExtras().getIntArray("layout");
+        }
+        catch(NullPointerException notLoadingSession){
+            //layout params need to come from server in this case
+        }
+
 
 
         if(sessionID != null){
@@ -117,13 +130,16 @@ public class ImportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentMain = new Intent(ImportActivity.this,
-                        QueueActivity2.class);
+                        CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
                 intentMain.putExtra("roster", content);
+                System.out.println(content);
                 ImportActivity.this.startActivity(intentMain);
             }
         });
+        //the list of all files in the project folder
         List<File> spinnerArray =  new ArrayList<File>();
+        //decided to make the specified folder "Tan" and it should be in the root of the device
         File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
 
@@ -132,7 +148,7 @@ public class ImportActivity extends AppCompatActivity {
             fileNames.add(i, csvList[i].getName());
         }
         for(String x:fileNames){
-            System.out.println(x);
+           // System.out.println(x);
         }
 
         ArrayAdapter<File> adapter = new ArrayAdapter<File>(
@@ -151,8 +167,10 @@ public class ImportActivity extends AppCompatActivity {
         catch (Exception e){
 
         }
-        System.out.println(content);
         rosterPreview.setText(content);
+
+        //split into separate entries for the checkpoint list
+        String lines[] = content.split("\\r?\\n");
 
 
 
