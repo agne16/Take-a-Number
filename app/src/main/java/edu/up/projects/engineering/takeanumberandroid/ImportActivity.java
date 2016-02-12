@@ -136,7 +136,7 @@ public class ImportActivity extends AppCompatActivity {
                 Intent intentMain = new Intent(ImportActivity.this,
                         CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
-                intentMain.putExtra("roster", content);
+                intentMain.putExtra("roster", rosterPreview.getText());
                 System.out.println(content);
                 ImportActivity.this.startActivity(intentMain);
             }
