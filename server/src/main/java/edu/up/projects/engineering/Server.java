@@ -45,7 +45,7 @@ public class Server
         //create an always listening server
         int clientNumber = 0;   // increments every time a new client connects
         running = true;
-        ServerSocket listener = new ServerSocket(9898);
+        ServerSocket listener = new ServerSocket(8080);
         try
         {
             while (running)
