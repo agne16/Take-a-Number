@@ -120,4 +120,25 @@
         android:layout_toRightOf="@+id/editText"
         android:layout_toEndOf="@+id/editText" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/numChecks"
+        android:text="0"
+        android:layout_below="@+id/selectCSV"
+        android:layout_alignLeft="@+id/selectCSV"
+        android:layout_alignStart="@+id/selectCSV" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Number of Checkpoints"
+        android:id="@+id/checksNoText"
+        android:layout_alignTop="@+id/numChecks"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_alignStart="@+id/editText2" />
+
 </RelativeLayout>

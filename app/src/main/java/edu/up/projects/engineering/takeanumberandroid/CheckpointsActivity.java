@@ -26,7 +26,9 @@ import java.io.File;
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     static String staticRoster;
+    static int staticChecks = 0;
     public String roster;
+    public CheckBox[][] checkList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +40,17 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             //means the roster hasn't been set yet
             //there might still be an old roster stored, so don't set it unless it's null
             if(staticRoster == null){
+                //placeholder
+                //maaaaybe remove before release?
                 staticRoster = "Micah, Alconcel \n Teolo, Agne \n Matthew, Farr \n Nick, Sohm \n Andrew, Vegdahl \n Steven, Nuxoll";
             }
+        }
+
+        try{
+            staticChecks = getIntent().getExtras().getInt("numChecks");
+        }
+        catch(NullPointerException extraNotSet){
+            //means roster's already been set
         }
 
         try{
@@ -62,29 +73,42 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
         ListView theRoster = (ListView) findViewById(R.id.rosterList);
+        Button syncB = (Button) findViewById(R.id.syncButton);
+        Button exportButton = (Button) findViewById(R.id.exportButton);
 
         HorizontalScrollView checkCont = (HorizontalScrollView) findViewById(R.id.checkContainer);
         LinearLayout rows = (LinearLayout) findViewById(R.id.checkRows);
 
 
-        String[] rooster = staticRoster.split("\\r?\\n");
+        final String[] rooster = staticRoster.split("\\r?\\n");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_list_item_1, rooster);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         theRoster.setAdapter(adapter);
 
+        //create a row for each name in the list
+        int counter = 0;
+        checkList = new CheckBox[rooster.length-1][];
         for(String x: rooster){
             LinearLayout column = new LinearLayout(this);
             column.setOrientation(LinearLayout.HORIZONTAL);
+            CheckBox[] checkRow = new CheckBox[staticChecks];
             for(int i = 0;i<10;i++){
                 CheckBox check = new CheckBox(this);
                 LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                //ltrb
+                //left, top, right, bottom margins
                 par.setMargins(5, 0, 5, 10);
+
                 check.setLayoutParams(par);
+                //give each checkbox a unique id so we can access it when it's time to output
+                int id = counter * staticChecks + i;
+                check.setId(id);
+                checkRow[i] = check;
                 column.addView(check);
             }
+            checkList[counter] = checkRow;
+            counter++;
             rows.addView(column);
         }
 
@@ -94,13 +118,14 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
 
 
+        //these listeners are for the three buttons at the top
         setupB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         MainActivity.class);
                 CheckpointsActivity.this.startActivity(intentMain);
-                Log.i("Content ", " Main layout ");
+
             }
         });
 
@@ -110,7 +135,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         QueueActivity2.class);
                 CheckpointsActivity.this.startActivity(intentMain);
-                Log.i("Content ", " Main layout ");
+
             }
         });
 
@@ -120,7 +145,37 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         CheckpointsActivity.class);
                 CheckpointsActivity.this.startActivity(intentMain);
-                Log.i("Content ", " Main layout ");
+
+            }
+        });
+
+        syncB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //convert into xml then send to server here
+                int counter = 0;
+                for(String x : rooster){
+                    CheckBox[] oneRow = checkList[counter];
+                    System.out.print(x + "'s checkpoints: ");
+                    for(CheckBox y : oneRow){
+                        if(y.isChecked()){
+                            System.out.print("1, ");
+                        }
+                        else{
+                            System.out.print("0, ");
+                        }
+                    }
+                    System.out.println();
+                    counter++;
+                }
+            }
+        });
+
+
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //convert into csv then save to folder here
             }
         });
 
@@ -130,8 +185,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO Auto-generated method stub
-
 
     }
 }

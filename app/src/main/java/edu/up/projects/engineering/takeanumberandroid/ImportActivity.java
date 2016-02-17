@@ -44,6 +44,7 @@ public class ImportActivity extends AppCompatActivity {
     // NICK
     EditText textOut;
     TextView textIn;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,9 @@ public class ImportActivity extends AppCompatActivity {
         Button createButton = (Button) findViewById(R.id.createButton);
         Button saveButton = (Button) findViewById(R.id.saveButton);
         Spinner selectCSV= (Spinner) findViewById(R.id.selectCSV);
+        EditText numChecks = (EditText) findViewById(R.id.numChecks);
+
+        final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
 
 
         setupB.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +141,7 @@ public class ImportActivity extends AppCompatActivity {
                         CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
                 intentMain.putExtra("roster", rosterPreview.getText());
+                intentMain.putExtra("numChecks", numberOfCheckpoints);
                 System.out.println(content);
                 ImportActivity.this.startActivity(intentMain);
             }
