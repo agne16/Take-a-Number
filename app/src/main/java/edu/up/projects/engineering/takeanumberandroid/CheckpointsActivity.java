@@ -26,7 +26,7 @@ import java.io.File;
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     static String staticRoster;
-    static int staticChecks = 0;
+    static int staticChecks = 5;
     public String roster;
     public CheckBox[][] checkList;
     @Override
@@ -89,12 +89,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
         //create a row for each name in the list
         int counter = 0;
-        checkList = new CheckBox[rooster.length-1][];
+        checkList = new CheckBox[rooster.length][];
         for(String x: rooster){
             LinearLayout column = new LinearLayout(this);
             column.setOrientation(LinearLayout.HORIZONTAL);
             CheckBox[] checkRow = new CheckBox[staticChecks];
-            for(int i = 0;i<10;i++){
+            for(int i = 0;i<staticChecks;i++){
                 CheckBox check = new CheckBox(this);
                 LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 //left, top, right, bottom margins
@@ -153,6 +153,15 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view) {
                 //convert into xml then send to server here
+
+            }
+        });
+
+
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //convert into csv then save to folder here
                 int counter = 0;
                 for(String x : rooster){
                     CheckBox[] oneRow = checkList[counter];
@@ -168,14 +177,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     System.out.println();
                     counter++;
                 }
-            }
-        });
-
-
-        exportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //convert into csv then save to folder here
             }
         });
 
