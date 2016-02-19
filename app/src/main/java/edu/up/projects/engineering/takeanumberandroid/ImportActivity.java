@@ -190,7 +190,7 @@ public class ImportActivity extends AppCompatActivity {
             DataInputStream dataInputStream = null;
 
             try {
-                socket = new Socket("192.168.127.1", 8888);
+                socket = new Socket("192.168.127.1", 9898);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 dataOutputStream.writeUTF(textOut.getText().toString());
