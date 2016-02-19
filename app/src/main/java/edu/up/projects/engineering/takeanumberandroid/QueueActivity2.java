@@ -11,27 +11,32 @@ import android.view.View;
 import android.widget.Button;
 
 public class QueueActivity2 extends AppCompatActivity {
-
+    public static int[] layout;
+int[] layoutParams;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        int[] layoutParams = getIntent().getExtras().getIntArray("layout");
-        if(layoutParams != null){
-            //draw the layout
-            System.out.println(layoutParams);
+
+
+        if(layout == null){
+            //set a default layout that's all empty
+            //as a reminder, 0 = left rows, 1 = right rows, 2 = left columns, 3 = right columns
+            layout = new int[4];
+            layout[0] = 0;
+            layout[1] = 0;
+            layout[2] = 0;
+            layout[3] = 0;
         }
+
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
 
-        
-          /*
-         * AYYYY for these to work, ya gotsta set whatever data you need for the page or something.
-         */
+
         setupB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +50,6 @@ public class QueueActivity2 extends AppCompatActivity {
         queueB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
             }
         });
 

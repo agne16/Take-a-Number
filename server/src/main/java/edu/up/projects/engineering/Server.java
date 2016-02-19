@@ -45,9 +45,11 @@ public class Server
         //create an always listening server
         int clientNumber = 0;   // increments every time a new client connects
         running = true;
-        ServerSocket listener = new ServerSocket(9898);
+        int port = 8081;
+        ServerSocket listener = new ServerSocket(port);
         try
         {
+            System.out.println("Running on port: " + port);
             while (running)
             {
                 //create a new instance of a class that reads a network input

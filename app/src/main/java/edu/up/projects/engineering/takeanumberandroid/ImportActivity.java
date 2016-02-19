@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,10 +40,11 @@ public class ImportActivity extends AppCompatActivity {
     String sessionID;
     int[] layoutParams = new int[4];
     private String content = "";
-
+    EditText rosterPreview;
     // NICK
     EditText textOut;
     TextView textIn;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +59,18 @@ public class ImportActivity extends AppCompatActivity {
         textIn = (TextView)findViewById(R.id.textin);
         buttonSend.setOnClickListener(buttonSendOnClickListener);
 
+
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
-        EditText rosterPreview = (EditText) findViewById(R.id.nameList);
+        rosterPreview = (EditText) findViewById(R.id.nameList);
         Button createButton = (Button) findViewById(R.id.createButton);
         Button saveButton = (Button) findViewById(R.id.saveButton);
         Spinner selectCSV= (Spinner) findViewById(R.id.selectCSV);
+        EditText numChecks = (EditText) findViewById(R.id.numChecks);
+
+        final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
+
 
         setupB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +102,22 @@ public class ImportActivity extends AppCompatActivity {
             }
         });
 
-        sessionID = getIntent().getExtras().getString("session");
-        layoutParams = getIntent().getExtras().getIntArray("layout");
+
+        try{
+            sessionID = getIntent().getExtras().getString("session");
+        }
+        catch(NullPointerException notLoadingSession){
+            //TODO generate session ID as though they didn't put in a session id (cause they didn't)
+        }
+
+        try{
+            layoutParams = getIntent().getExtras().getIntArray("layout");
+        }
+        catch(NullPointerException notLoadingSession){
+            //layout params need to come from server in this case
+            //TODO get a session id from server in this case - this case should only happen if they selected "load lab session"
+        }
+
 
 
         if(sessionID != null){
@@ -117,42 +138,66 @@ public class ImportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentMain = new Intent(ImportActivity.this,
-                        QueueActivity2.class);
+                        CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
-                intentMain.putExtra("roster", content);
+                intentMain.putExtra("roster", rosterPreview.getText());
+                intentMain.putExtra("numChecks", numberOfCheckpoints);
+                System.out.println(content);
                 ImportActivity.this.startActivity(intentMain);
             }
         });
+        //the list of all files in the project folder
         List<File> spinnerArray =  new ArrayList<File>();
+        //decided to make the specified folder "Tan" and it should be in the root of the device
         File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
 
-        ArrayList<String> fileNames = new ArrayList<String>();
-        for(int i = 0; i<csvList.length; i++){
-            fileNames.add(i, csvList[i].getName());
+        if(csvList != null){
+            ArrayAdapter<File> adapter = new ArrayAdapter<File>(
+                    this, android.R.layout.simple_spinner_item, csvList);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            final Spinner sItems = (Spinner) findViewById(R.id.selectCSV);
+            sItems.setAdapter(adapter);
+            sItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    File xc = (File) sItems.getSelectedItem();
+                    String cont = "";
+                    try{
+                        cont = readFile(xc.toString());
+                    }
+                    catch (IOException noFile){
+
+                    }
+                    System.out.println("AYYYY");
+                    System.out.println(xc);
+                    rosterPreview.setText(cont);
+
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // your code here
+                }
+
+            });
+            String selected = sItems.getSelectedItem().toString();
+            if (selected.equals("what ever the option was")) {
+            }
+            File selected2 = (File) selectCSV.getSelectedItem();
+            try {
+                content = readFile(selected2.toString());
+            }
+            catch (Exception e){
+
+            }
+            rosterPreview.setText(content);
         }
-        for(String x:fileNames){
-            System.out.println(x);
+        else{
+            rosterPreview.setText("NO CSV FILES FOUND");
         }
 
-        ArrayAdapter<File> adapter = new ArrayAdapter<File>(
-                this, android.R.layout.simple_spinner_item, csvList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItems = (Spinner) findViewById(R.id.selectCSV);
-        sItems.setAdapter(adapter);
-        String selected = sItems.getSelectedItem().toString();
-        if (selected.equals("what ever the option was")) {
-        }
-        File selected2 = (File) selectCSV.getSelectedItem();
-        content = "AYY";
-        try {
-            content = readFile(selected2.toString());
-        }
-        catch (Exception e){
-
-        }
-        System.out.println(content);
-        rosterPreview.setText(content);
 
 
 
@@ -160,6 +205,13 @@ public class ImportActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * A helper method to read a file.
+     * @param file - the file to read
+     * @return - the string containing the file's contents
+     * @throws IOException
+     */
     private String readFile( String file ) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader(file));
         String         line = null;
@@ -176,6 +228,10 @@ public class ImportActivity extends AppCompatActivity {
         } finally {
             reader.close();
         }
+    }
+
+    private void setRosterPreview(String roster){
+        rosterPreview.setText(roster);
     }
 
 
