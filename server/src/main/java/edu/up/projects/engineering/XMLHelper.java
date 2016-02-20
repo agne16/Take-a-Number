@@ -90,24 +90,16 @@ public class XMLHelper
         return parsedState;
     }
 
-    public void writeFile()
+    public void writeFile(LabState labState)
     {
         int courseID = 777;
         String courseSection = "A";
         String courseName = "The Wardening";
-        int labSessionID = 696969; // placeholder data for xml write
-        String [] userIDs = new String [10];
-        int numCheckpoints = 7;
-        for (int x = 0; x < 10; x++)
-        {
-            userIDs[x] = "userID" + x;
-        }
-        boolean passedCheckpoint = false;
 
         try
         {
             String path = System.getProperty("user.dir");
-            File file = new File(path + "/CS" + courseID + courseSection + "-" + courseName + "-" + labSessionID + ".txt");
+            File file = new File(path + "/CS" + courseSection + courseID + "-" + courseName + "-" + labState.getSessionId() + ".txt");
             if(!file.exists())
             {
                 file.createNewFile();
@@ -115,11 +107,11 @@ public class XMLHelper
             FileWriter write = new FileWriter(file.getAbsoluteFile());
             PrintWriter print_line = new PrintWriter(write);
             print_line.print("<?xml version=\"1.0\"?>\n");
-            print_line.print("<Lab sessionID=\"" + labSessionID + "\">\n");
-            for (int x = 0; x < userIDs.length; x++) {
-                print_line.print("\t<student userID=\"" + userIDs[x] + "\">\n");
-                for (int y = 0; y < numCheckpoints; y++)
-                    print_line.print("\t\t<checkpoint" + y + ">" + passedCheckpoint + "</checkpoint" + y + ">\n");
+            print_line.print("<Lab sessionID=\"" + labState.getSessionId() + "\">\n");
+            for (int x = 0; x < labState.getClassRoster().length; x++) {
+                print_line.print("\t<student userID=\"" + labState.getClassRoster()[x] + "\">\n");
+                for (int y = 0; y < labState.getCheckpoints().length; y++)
+                    print_line.print("\t\t<checkpoint" + y + ">" + labState.getCheckpoints()[x][y] + "</checkpoint" + y + ">\n");
                 print_line.print("\t</student>\n");
             }
             print_line.print("</lab>");

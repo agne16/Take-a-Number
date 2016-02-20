@@ -108,10 +108,10 @@ public class Server
 
                         // write a sample xml file
                         XMLHelper helper = new XMLHelper();
-                        helper.writeFile();
 
                         // parse a sample xml file to an object and print values
                         LabState labState = helper.parseXML(rootPath, filename);
+                        helper.writeFile(labState);
                         System.out.println("Lab Session ID: " + labState.getSessionId());
                         System.out.println("Student: " + labState.getClassRoster()[0]);
                         System.out.println("Checkpoint 1: " + labState.getCheckpoints()[0][1]);
