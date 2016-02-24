@@ -244,9 +244,7 @@ public class ImportActivity extends AppCompatActivity {
     }
 
 
-    // NICK
-    //
-    //
+
     private class SendfeedbackJob extends AsyncTask<String, Void, String> {
         String message2 = "";
         PrintWriter out;
