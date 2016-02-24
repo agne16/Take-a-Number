@@ -1,6 +1,7 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +55,21 @@ public class ImportActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         // NICK
         textOut = (EditText)findViewById(R.id.textout);
         Button buttonSend = (Button)findViewById(R.id.send);
-        textIn = (TextView)findViewById(R.id.textin);
-        buttonSend.setOnClickListener(buttonSendOnClickListener);
+
+
+        buttonSend.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                SendfeedbackJob job = new SendfeedbackJob();
+                textIn = (TextView)findViewById(R.id.textin);
+                job.execute(textIn.getText().toString());
+            }
+        });
 
 
         Button setupB = (Button) findViewById(R.id.setupButton);
@@ -67,9 +79,8 @@ public class ImportActivity extends AppCompatActivity {
         Button createButton = (Button) findViewById(R.id.createButton);
         Button saveButton = (Button) findViewById(R.id.saveButton);
         Spinner selectCSV= (Spinner) findViewById(R.id.selectCSV);
-        EditText numChecks = (EditText) findViewById(R.id.numChecks);
 
-        final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
+
 
 
         setupB.setOnClickListener(new View.OnClickListener() {
@@ -122,12 +133,10 @@ public class ImportActivity extends AppCompatActivity {
 
         if(sessionID != null){
             //handler if they input a sessionID
-            System.out.println("Session iD:" + sessionID);
         }
         else if(layoutParams != null){
             //handler if they input layout parameters
             //0 = left row, 1 = right row, 2 = left cols, 3 = right cols
-            System.out.println("Here: " + layoutParams[0] + " and " + layoutParams[1]);
         }
         else{
             //handler for if they chose a preset lab session
@@ -140,9 +149,11 @@ public class ImportActivity extends AppCompatActivity {
                 Intent intentMain = new Intent(ImportActivity.this,
                         CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
-                intentMain.putExtra("roster", rosterPreview.getText());
+                intentMain.putExtra("roster", rosterPreview.getText().toString());
+                EditText numChecks = (EditText) findViewById(R.id.numChecks);
+
+                final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
                 intentMain.putExtra("numChecks", numberOfCheckpoints);
-                System.out.println(content);
                 ImportActivity.this.startActivity(intentMain);
             }
         });
@@ -169,8 +180,6 @@ public class ImportActivity extends AppCompatActivity {
                     catch (IOException noFile){
 
                     }
-                    System.out.println("AYYYY");
-                    System.out.println(xc);
                     rosterPreview.setText(cont);
 
 
@@ -238,19 +247,20 @@ public class ImportActivity extends AppCompatActivity {
     // NICK
     //
     //
-    Button.OnClickListener buttonSendOnClickListener = new Button.OnClickListener() {
+    private class SendfeedbackJob extends AsyncTask<String, Void, String> {
+        String message2 = "";
+        PrintWriter out;
         @Override
-        public void onClick(View arg0) {
+        protected String doInBackground(String[] params) {
             Socket socket = null;
             DataOutputStream dataOutputStream = null;
             DataInputStream dataInputStream = null;
-
             try {
-                socket = new Socket("192.168.127.1", 8888);
+                socket = new Socket("10.17.3.72", 8081);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
-                dataOutputStream.writeUTF(textOut.getText().toString());
-                textIn.setText(dataInputStream.readUTF());
+                out = new PrintWriter(socket.getOutputStream(), true);
+                out.println("append");
             }
             catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -258,34 +268,35 @@ public class ImportActivity extends AppCompatActivity {
             catch (IOException e) {
                 e.printStackTrace();
             }
-            finally {
-                if (socket != null) {
-                    try {
-                        socket.close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            try {
+                while (true) {
+                    String x = "";
 
-                if (dataOutputStream != null) {
-                    try {
-                        dataOutputStream.close();
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                    x = dataInputStream.readLine();
+                    System.out.println(x);
 
-                if (dataInputStream != null) {
-                    try {
+
+                    if (x.equals("ayy")) {
                         dataInputStream.close();
+                        dataOutputStream.close();
+                        socket.close();
+                        out.println("");
+                        System.out.println("CLOSING AHHHHHHHHH");
+                        break;
                     }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 }
             }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return "some message";
         }
-    };
+
+        @Override
+        protected void onPostExecute(String message) {
+            message2 = message;
+        }
+    }
 }

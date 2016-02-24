@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
@@ -162,21 +164,30 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view) {
                 //convert into csv then save to folder here
-                int counter = 0;
-                for(String x : rooster){
-                    CheckBox[] oneRow = checkList[counter];
-                    System.out.print(x + "'s checkpoints: ");
-                    for(CheckBox y : oneRow){
-                        if(y.isChecked()){
-                            System.out.print("1, ");
+                File exportedList = new File("abc.txt");
+                try{
+                    PrintWriter writer = new PrintWriter("/sdcard/TAN/abc.txt");
+                    int counter = 0;
+                    for(String x : rooster){
+                        CheckBox[] oneRow = checkList[counter];
+                        writer.print(x + "'s checkpoints: ");
+                        for(CheckBox y : oneRow){
+                            if(y.isChecked()){
+                                writer.print("1, ");
+                            }
+                            else{
+                                writer.print("0, ");
+                            }
                         }
-                        else{
-                            System.out.print("0, ");
-                        }
+                        writer.println();
+                        counter++;
                     }
-                    System.out.println();
-                    counter++;
+                    writer.close();
                 }
+                catch(FileNotFoundException fnfe){
+
+                }
+
             }
         });
 
