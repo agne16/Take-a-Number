@@ -188,7 +188,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
                 //TODO - add ip address, etc.
                 //format is: CHECKPOINT#SESSION ID#IP ADDRESS#rest
-                String toSend = "CHECKPOINT#17378#";
+                String toSend = "CHECKPOINT#64378#";
 
                 //convert the contents into the proper format
                 //format will be:
