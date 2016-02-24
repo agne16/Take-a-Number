@@ -257,6 +257,7 @@ public class ImportActivity extends AppCompatActivity {
             DataInputStream dataInputStream = null;
             try {
                 socket = new Socket("10.17.3.72", 8081);
+                socket = new Socket("192.168.127.1", 9898);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
