@@ -38,6 +38,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     public String roster;
     public CheckBox[][] checkList;
 
+    String mergeResult = "";
+
     //checkbox to compare when syncing
     //used to tell if the professor wants to send an "uncheck" to the server
     //as opposed to checking someone mistakenly and unchecking them
@@ -213,7 +215,11 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 job.execute(toSend, "" + staticChecks);
                 System.out.println(toSend);
 
-                //TODO send it to server
+                while(job.getMergeResult().equals("")){
+                    //wait until server delivers the goods
+                }
+
+                mergeResult = job.getMergeResult();
 
             }
         });
@@ -288,6 +294,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         PrintWriter out;
         int numChecks = 0;
         int rosterLength = 0;
+        String mergeResult = "";
         @Override
         protected String doInBackground(String[] params) {
             Socket socket = null;
@@ -333,6 +340,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                         System.out.println("CLOSING AHHHHHHHHH");
                         break;
                     }
+                    else{
+                        //this means we received the checkpoint update from the server
+                        mergeResult = x;
+                    }
 
                 }
             }
@@ -343,46 +354,54 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             return "some message";
         }
 
-        //sets the message to send to the passed in message
+
         @Override
         protected void onPostExecute(String message) {
         }
 
+        /**
+         * mergeTwo - a function that merges two Strings (that should represent checkpoint lists) into one
+         * format of the string should be CHECKPOINT#SESSION ID#name,cp1,cp2...#name,cp1,cp2... etc
+         * @param mine - the string the tablet sent
+         * @param servers - the string stored on the server
+         */
         public void mergeTwo(String mine, String servers){
             String[] myFields = mine.split("#");
             String[] serverFields = servers.split("#");
-            //TODO - check if that's the right field
-            String myChecks = myFields[2];
             String serversChecks = serverFields[2];
 
 
             //merge them
             //ignoring freshly checked for now
-            CheckBox[][] mergedChecks = new CheckBox[rosterLength][];
-            String[] stringArray = new String[rosterLength];
 
+            String[] mergeResult = new String[rosterLength];
+
+            //index 0 = type of message, index 1 = session id, everything else = checkpoint info for each student
             for(int i = 2;i<myFields.length;i++){
-                //mergedChecks[i-2] = new CheckBox[numChecks];
-                CheckBox[] mergedRow = new CheckBox[numChecks];
+                //should be of format fullname,cp1,cp2...
                 String myCurrent = myFields[i];
-                String serverCurrent = serverFields[i];
+
+                //index 0 = name, everything else = checkpoint info
                 String[] parsedMine = myCurrent.split(",");
                 String[] parsedServer = serversChecks.split(",");
-                //should be name
-                stringArray[i-2] = parsedMine[0];
+
+                //should be the name
+                mergeResult[i-2] = parsedMine[0];
+
                 for(int j = 1;j<numChecks+1; j++){
                     if(parsedMine[j].equals("1") || parsedServer[j].equals("1")){
-                        stringArray[i-2] = stringArray[i-2] + ",1";
+                        mergeResult[i-2] = mergeResult[i-2] + ",1";
                     }
                     else{
-                        stringArray[i-2] = stringArray[i-2] + ",0";
+                        mergeResult[i-2] = mergeResult[i-2] + ",0";
                     }
                 }
-                stringArray[i-2] = stringArray[i-2] + "#";
+                mergeResult[i-2] = mergeResult[i-2] + "#";
             }
+        }
 
-
-
+        public String getMergeResult(){
+            return mergeResult;
         }
     }
 }
