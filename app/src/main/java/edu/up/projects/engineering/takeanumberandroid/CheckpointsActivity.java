@@ -213,6 +213,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 }
                 SendfeedbackJob job = new SendfeedbackJob();
                 job.execute(toSend, "" + staticChecks);
+
+                //TODO bypass everything and send a hard coded message
+                toSend = "checkpointInit#271,B,02,ComputerScienceLaboratory,3#agne16,Teofilo,Agne,0,0,0#alconcel16,Micah,Alconcel,1,0,0";
                 System.out.println(toSend);
 
                 while(job.getMergeResult().equals("")){
@@ -302,13 +305,16 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             DataInputStream dataInputStream = null;
             message2 = params[0];
             numChecks = Integer.parseInt(params[1]);
-            rosterLength = Integer.parseInt(params[2]);
+            //rosterLength = Integer.parseInt(params[2]);
             try {
                 //socket = new Socket("10.17.3.72", 8081);
                socket = new Socket("192.168.1.144", 8080);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
+
+                //TODO
+                message2 = "checkpointInit#271,B,02,ComputerScienceLaboratory,3#agne16,Teofilo,Agne,0,0,0#alconcel16,Micah,Alconcel,1,0,0";
                 out.println(message2);
             }
             catch (UnknownHostException e) {
