@@ -188,7 +188,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
                 //TODO - add ip address, etc.
                 //format is: CHECKPOINT#SESSION ID#IP ADDRESS#rest
-                String toSend = "CHECKPOINT#64378#";
+                String toSend = "CHECKPOINT#64378";
 
                 //convert the contents into the proper format
                 //format will be:
@@ -197,20 +197,20 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 for(String x : rooster){
                     CheckBox[] oneRow = checkList[counter];
                     //full name#
-                    toSend = toSend+x+"#";
+                    toSend = toSend+"#"+x+",";
                     //TODO add check if freshly unchecked
                     for(CheckBox y : oneRow){
                         if(y.isChecked()){
                             //checkpoint#
-                            toSend = toSend+"1#";
+                            toSend = toSend+"1,";
                         }
                         else{
-                            toSend = toSend+"0#";
+                            toSend = toSend+"0,";
                         }
                     }
                 }
                 SendfeedbackJob job = new SendfeedbackJob();
-                job.execute(toSend);
+                job.execute(toSend, "" + staticChecks);
                 System.out.println(toSend);
 
                 //TODO send it to server
@@ -286,12 +286,16 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         String message2 = "";
         String receivedMessage = "";
         PrintWriter out;
+        int numChecks = 0;
+        int rosterLength = 0;
         @Override
         protected String doInBackground(String[] params) {
             Socket socket = null;
             DataOutputStream dataOutputStream = null;
             DataInputStream dataInputStream = null;
             message2 = params[0];
+            numChecks = Integer.parseInt(params[1]);
+            rosterLength = Integer.parseInt(params[2]);
             try {
                 //socket = new Socket("10.17.3.72", 8081);
                socket = new Socket("192.168.1.144", 8080);
@@ -314,6 +318,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     x = dataInputStream.readLine();
                     receivedMessage = x;
                     System.out.println(x);
+
+                    //mergeee
 
 
                     if (x.equals("")) {
@@ -340,6 +346,43 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         //sets the message to send to the passed in message
         @Override
         protected void onPostExecute(String message) {
+        }
+
+        public void mergeTwo(String mine, String servers){
+            String[] myFields = mine.split("#");
+            String[] serverFields = servers.split("#");
+            //TODO - check if that's the right field
+            String myChecks = myFields[2];
+            String serversChecks = serverFields[2];
+
+
+            //merge them
+            //ignoring freshly checked for now
+            CheckBox[][] mergedChecks = new CheckBox[rosterLength][];
+            String[] stringArray = new String[rosterLength];
+
+            for(int i = 2;i<myFields.length;i++){
+                //mergedChecks[i-2] = new CheckBox[numChecks];
+                CheckBox[] mergedRow = new CheckBox[numChecks];
+                String myCurrent = myFields[i];
+                String serverCurrent = serverFields[i];
+                String[] parsedMine = myCurrent.split(",");
+                String[] parsedServer = serversChecks.split(",");
+                //should be name
+                stringArray[i-2] = parsedMine[0];
+                for(int j = 1;j<numChecks+1; j++){
+                    if(parsedMine[j].equals("1") || parsedServer[j].equals("1")){
+                        stringArray[i-2] = stringArray[i-2] + ",1";
+                    }
+                    else{
+                        stringArray[i-2] = stringArray[i-2] + ",0";
+                    }
+                }
+                stringArray[i-2] = stringArray[i-2] + "#";
+            }
+
+
+
         }
     }
 }
