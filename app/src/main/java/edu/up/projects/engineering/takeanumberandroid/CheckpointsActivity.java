@@ -3,40 +3,40 @@ package edu.up.projects.engineering.takeanumberandroid;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.HorizontalScrollView;
+
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 
-public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener{
+public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener{
 
     static String staticRoster;
     static int staticChecks = 5;
-    public String roster;
-    public CheckBox[][] checkList;
+    static String serverResponse = "";
+    static Hashtable<String, Boolean> checkpointSaved;
+    CheckBox[][] checkList;
 
     String mergeResult = "";
 
@@ -47,7 +47,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(checkpointSaved == null){
+            checkpointSaved = new Hashtable<String, Boolean>();
+        }
 
         try{
             staticRoster = getIntent().getExtras().getString("roster");
@@ -94,14 +96,24 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         Button syncB = (Button) findViewById(R.id.syncButton);
         Button exportButton = (Button) findViewById(R.id.exportButton);
 
-        HorizontalScrollView checkCont = (HorizontalScrollView) findViewById(R.id.checkContainer);
         LinearLayout rows = (LinearLayout) findViewById(R.id.checkRows);
 
 
         final String[] rooster = staticRoster.split("\\r?\\n");
+        String[] studentNames = new String[rooster.length];
+        String[] studentIds = new String[rooster.length];
+        int index = 0;
+        for(String x : rooster){
+
+            String[] temp = x.split(",");
+            studentIds[index] = temp[0].trim();
+            studentNames[index] = temp[1] + temp[2];
+            index++;
+        }
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, rooster);
+                this, android.R.layout.simple_list_item_1, studentNames);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
         theRoster.setAdapter(adapter);
 
@@ -120,31 +132,43 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
 
         //create a row for each name in the list
-        int counter = 0;
-        checkList = new CheckBox[rooster.length][];
-        for(String x: rooster){
-            LinearLayout column = new LinearLayout(this);
-            column.setOrientation(LinearLayout.HORIZONTAL);
-            CheckBox[] checkRow = new CheckBox[staticChecks];
-            for(int i = 0;i<staticChecks;i++){
-                CheckBox check = new CheckBox(this);
-                check.setOnClickListener(this);
-                check.setOnLongClickListener(this);
-                LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                //left, top, right, bottom margins
-                par.setMargins(5, 0, 5, 10);
+        int counter = 1;
 
-                check.setLayoutParams(par);
-                //give each checkbox a unique id so we can access it when it's time to output
-                int id = counter * staticChecks + i;
-                check.setId(id);
-                checkRow[i] = check;
-                column.addView(check);
+        //only recreate checkList if it's null
+
+
+            checkList = new CheckBox[rooster.length][];
+            for (String x : rooster) {
+                LinearLayout column = new LinearLayout(this);
+                column.setOrientation(LinearLayout.HORIZONTAL);
+                CheckBox[] checkRow = new CheckBox[staticChecks];
+                for (int i = 0; i < staticChecks; i++) {
+                    String id = "" + counter + "" + i;
+                    CheckBox check = new CheckBox(this);
+                    check.setOnClickListener(this);
+                    check.setOnLongClickListener(this);
+                    LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    //left, top, right, bottom margins
+                    par.setMargins(5, 0, 5, 10);
+
+                    check.setLayoutParams(par);
+                    //give each checkbox a unique id so we can access it when it's time to output
+                    int ids = Integer.parseInt(id);
+                    check.setId(ids);
+                    checkRow[i] = check;
+                    column.addView(check);
+
+                    if(checkpointSaved.get(id) == null){
+                        checkpointSaved.put(id, false);
+                    }
+                    else{
+                        check.setChecked(checkpointSaved.get(id));
+                    }
+                }
+                checkList[counter-1] = checkRow;
+                counter++;
+                rows.addView(column);
             }
-            checkList[counter] = checkRow;
-            counter++;
-            rows.addView(column);
-        }
 
 
 
@@ -188,7 +212,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             public void onClick(View view) {
                 //convert into format then send to server
 
-                //TODO - add ip address, etc.
                 //format is: CHECKPOINT#SESSION ID#IP ADDRESS#rest
                 String toSend = "CHECKPOINT#64378";
 
@@ -214,15 +237,17 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 SendfeedbackJob job = new SendfeedbackJob();
                 job.execute(toSend, "" + staticChecks);
 
-                //TODO bypass everything and send a hard coded message
-                toSend = "checkpointInit#271,B,02,ComputerScienceLaboratory,3#agne16,Teofilo,Agne,0,0,0#alconcel16,Micah,Alconcel,1,0,0";
+                //TODO need to check if this is an appropriate way of doing receiving message from the server
                 System.out.println(toSend);
 
                 while(job.getMergeResult().equals("")){
                     //wait until server delivers the goods
                 }
 
-                mergeResult = job.getMergeResult();
+
+//                System.out.println("BEFORE: " + toSend);
+//                String mergeResult = "CHECKPOINT#sessionid#micah alconcel,1,1,1#teolo agne,1,1,1#matthew farr,1,1,1#nick sohm,1,1,1#andrew vegdahl,1,1,1#steven nuxoll,1,1,1#fenne kin,1,1,1#howe ewe doin,1,1,0";
+                updateCheckpoints(serverResponse);
 
             }
         });
@@ -232,7 +257,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view) {
                 //convert into csv then save to folder here
-                File exportedList = new File("abc.txt");
                 try{
                     PrintWriter writer = new PrintWriter("/sdcard/TAN/abc.txt");
                     int counter = 0;
@@ -253,7 +277,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     writer.close();
                 }
                 catch(FileNotFoundException fnfe){
-
+                    fnfe.printStackTrace();
                 }
 
             }
@@ -265,11 +289,44 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     //a short click should always leave it checked
     public void onClick(View view){
         if(view instanceof CheckBox){
+
             CheckBox temp = (CheckBox) view;
             temp.setChecked(true);
+            String id = "" + temp.getId();
+            checkpointSaved.put(id, true);
         }
     }
 
+    /**
+     * updateCheckpoints - merge the server's checkpoint list with ours, then refresh the page to apply the changes
+     * @param updatedList - the updated checkpoint list that should come from the server
+     */
+    public void updateCheckpoints(String updatedList){
+        String[] initSplit = updatedList.split("#");
+        int counter = 1;
+
+        //checkpoints should start at 2
+        //TODO clarify whether the name is split into first, last
+        //TODO double check format
+        for(int i = 2;i<initSplit.length;i++){
+            String[] currentList = initSplit[i].split(",");
+            for(int j = 1; j<staticChecks+1; j++){
+                int secondDigit = j-1;
+                String id = "" + counter + secondDigit;
+                if(currentList[j].equals("1")){
+                    checkpointSaved.put(id, true);
+                }
+                else{
+                    checkpointSaved.put(id, false);
+                }
+            }
+            counter++;
+        }
+        Intent intentMain = new Intent(CheckpointsActivity.this,
+                CheckpointsActivity.class);
+        CheckpointsActivity.this.startActivity(intentMain);
+
+    }
 
 
 
@@ -284,9 +341,20 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         if(v instanceof CheckBox){
             CheckBox temp = (CheckBox) v;
             temp.setChecked(false);
+            String id = "" + temp.getId();
+            checkpointSaved.put(id, false);
+            return true;
         }
         return false;
     }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        return false;
+    }
+
+
 
     /**
      * A helper class to send/receive messages from a java server
@@ -313,8 +381,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
 
-                //TODO
-                message2 = "checkpointInit#271,B,02,ComputerScienceLaboratory,3#agne16,Teofilo,Agne,0,0,0#alconcel16,Micah,Alconcel,1,0,0";
                 out.println(message2);
             }
             catch (UnknownHostException e) {
@@ -357,12 +423,14 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 e.printStackTrace();
             }
 
-            return "some message";
+            return mergeResult;
         }
 
 
         @Override
         protected void onPostExecute(String message) {
+            serverResponse = message;
+
         }
 
         /**

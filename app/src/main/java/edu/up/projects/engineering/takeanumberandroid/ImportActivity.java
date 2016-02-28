@@ -56,20 +56,7 @@ public class ImportActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        // NICK
-        textOut = (EditText)findViewById(R.id.textout);
-        Button buttonSend = (Button)findViewById(R.id.send);
 
-
-        buttonSend.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                SendfeedbackJob job = new SendfeedbackJob();
-                textIn = (TextView)findViewById(R.id.textin);
-                job.execute(textIn.getText().toString());
-            }
-        });
 
 
         Button setupB = (Button) findViewById(R.id.setupButton);
