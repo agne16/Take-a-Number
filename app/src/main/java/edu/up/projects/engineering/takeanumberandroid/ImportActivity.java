@@ -35,6 +35,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
 import android.app.Activity;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,7 +44,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class ImportActivity extends AppCompatActivity {
+public class ImportActivity extends AppCompatActivity
+{
     String sessionID;
     int[] layoutParams = new int[4];
     private String content = "";
@@ -62,7 +64,8 @@ public class ImportActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -78,9 +81,11 @@ public class ImportActivity extends AppCompatActivity {
         Spinner selectCSV = (Spinner) findViewById(R.id.selectCSV);
 
 
-        setupB.setOnClickListener(new View.OnClickListener() {
+        setupB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(ImportActivity.this,
                         MainActivity.class);
                 ImportActivity.this.startActivity(intentMain);
@@ -88,9 +93,11 @@ public class ImportActivity extends AppCompatActivity {
             }
         });
 
-        queueB.setOnClickListener(new View.OnClickListener() {
+        queueB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(ImportActivity.this,
                         QueueActivity2.class);
                 ImportActivity.this.startActivity(intentMain);
@@ -98,9 +105,11 @@ public class ImportActivity extends AppCompatActivity {
             }
         });
 
-        checkpointsB.setOnClickListener(new View.OnClickListener() {
+        checkpointsB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(ImportActivity.this,
                         CheckpointsActivity.class);
                 ImportActivity.this.startActivity(intentMain);
@@ -109,33 +118,47 @@ public class ImportActivity extends AppCompatActivity {
         });
 
 
-        try {
+        try
+        {
             sessionID = getIntent().getExtras().getString("session");
-        } catch (NullPointerException notLoadingSession) {
+        }
+        catch (NullPointerException notLoadingSession)
+        {
             //TODO generate session ID as though they didn't put in a session id (cause they didn't)
         }
 
-        try {
+        try
+        {
             layoutParams = getIntent().getExtras().getIntArray("layout");
-        } catch (NullPointerException notLoadingSession) {
+        }
+        catch (NullPointerException notLoadingSession)
+        {
             //layout params need to come from server in this case
             //TODO get a session id from server in this case - this case should only happen if they selected "load lab session"
         }
 
 
-        if (sessionID != null) {
+        if (sessionID != null)
+        {
             //handler if they input a sessionID
-        } else if (layoutParams != null) {
+            SendfeedbackJob job = new SendfeedbackJob();
+            job.execute("sessionRetrieve#" + sessionID);
+
+        } else if (layoutParams != null)
+        {
             //handler if they input layout parameters
             //0 = left row, 1 = right row, 2 = left cols, 3 = right cols
-        } else {
+        } else
+        {
             //handler for if they chose a preset lab session
 
         }
 
-        createButton.setOnClickListener(new View.OnClickListener() {
+        createButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(ImportActivity.this,
                         CheckpointsActivity.class);
                 intentMain.putExtra("layout", layoutParams);
@@ -151,12 +174,12 @@ public class ImportActivity extends AppCompatActivity {
                 String checkpoints = "";
                 for (int i = 0; i < numberOfCheckpoints; i++)
                 {
-                        checkpoints += ",0";
+                    checkpoints += ",0";
                 }
 
                 String labNumber = "01";//TODO lab number hardcoded for now
                 String rosterString = content;
-                outMessage += courseId + "," + courseSection + "," +labNumber + "," + courseName + "," + numberOfCheckpoints;
+                outMessage += courseId + "," + courseSection + "," + labNumber + "," + courseName + "," + numberOfCheckpoints;
                 String[] studentNames = rosterString.split("\\n");
                 for (String s : studentNames)
                 {
@@ -176,20 +199,26 @@ public class ImportActivity extends AppCompatActivity {
         File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
 
-        if (csvList != null) {
+        if (csvList != null)
+        {
             ArrayAdapter<File> adapter = new ArrayAdapter<File>(
                     this, android.R.layout.simple_spinner_item, csvList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             final Spinner sItems = (Spinner) findViewById(R.id.selectCSV);
             sItems.setAdapter(adapter);
-            sItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            sItems.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+            {
                 @Override
-                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                {
                     File xc = (File) sItems.getSelectedItem();
                     String cont = "";
-                    try {
+                    try
+                    {
                         cont = readFile(xc.toString());
-                    } catch (IOException noFile) {
+                    }
+                    catch (IOException noFile)
+                    {
 
                     }
                     rosterPreview.setText(cont);
@@ -198,27 +227,33 @@ public class ImportActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parentView) {
+                public void onNothingSelected(AdapterView<?> parentView)
+                {
                     // your code here
                 }
 
             });
             String selected = sItems.getSelectedItem().toString();
-            if (selected.equals("what ever the option was")) {
+            if (selected.equals("what ever the option was"))
+            {
             }
             File selected2 = (File) selectCSV.getSelectedItem();
-            try {
+            try
+            {
                 String[] path = selected2.getPath().split("/");
                 String fileName = path[path.length - 1];
                 courseId = fileName.split("-")[0].substring(2, 5);
                 courseSection = fileName.split("-")[0].substring(5);
                 courseName = fileName.split("-")[1].split("\\.")[0];
                 content = readFile(selected2.toString());
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
 
             }
             rosterPreview.setText(content);
-        } else {
+        } else
+        {
             rosterPreview.setText("NO CSV FILES FOUND");
         }
 
@@ -235,30 +270,37 @@ public class ImportActivity extends AppCompatActivity {
      * @return - the string containing the file's contents
      * @throws IOException
      */
-    private String readFile(String file) throws IOException {
+    private String readFile(String file) throws IOException
+    {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
         StringBuilder stringBuilder = new StringBuilder();
         String ls = System.getProperty("line.separator");
 
-        try {
-            while ((line = reader.readLine()) != null) {
+        try
+        {
+            while ((line = reader.readLine()) != null)
+            {
                 stringBuilder.append(line);
                 stringBuilder.append(ls);
             }
 
             return stringBuilder.toString();
-        } finally {
+        }
+        finally
+        {
             reader.close();
         }
     }
 
-    private void setRosterPreview(String roster) {
+    private void setRosterPreview(String roster)
+    {
         rosterPreview.setText(roster);
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -278,7 +320,8 @@ public class ImportActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -298,17 +341,20 @@ public class ImportActivity extends AppCompatActivity {
     }
 
 
-    private class SendfeedbackJob extends AsyncTask<String, Void, String> {
+    private class SendfeedbackJob extends AsyncTask<String, Void, String>
+    {
         String message2 = "";
         String outMessage = "";
         PrintWriter out;
 
         @Override
-        protected String doInBackground(String[] params) {
+        protected String doInBackground(String[] params)
+        {
             Socket socket = null;
             DataOutputStream dataOutputStream = null;
             DataInputStream dataInputStream = null;
-            try {
+            try
+            {
                 socket = new Socket("192.168.1.144", 8080);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
@@ -316,21 +362,29 @@ public class ImportActivity extends AppCompatActivity {
                 outMessage = params[0];
                 out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(outMessage);
-            } catch (UnknownHostException e) {
+                out.println("");
+            }
+            catch (UnknownHostException e)
+            {
                 e.printStackTrace();
-            } catch (IOException e) {
+            }
+            catch (IOException e)
+            {
                 e.printStackTrace();
             }
             String x = "";
-            try {
-                while (true) {
+            try
+            {
+                while (true)
+                {
                     x = "";
 
                     x = dataInputStream.readLine();
                     System.out.println(x);
 
 
-                    if (x.equals("ayy")) {
+                    if (x.equals(""))
+                    {
                         dataInputStream.close();
                         dataOutputStream.close();
                         socket.close();
@@ -338,9 +392,10 @@ public class ImportActivity extends AppCompatActivity {
                         System.out.println("CLOSING AHHHHHHHHH");
                         break;
                     }
-
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
 
@@ -348,7 +403,8 @@ public class ImportActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String message) {
+        protected void onPostExecute(String message)
+        {
             message2 = message;
         }
     }

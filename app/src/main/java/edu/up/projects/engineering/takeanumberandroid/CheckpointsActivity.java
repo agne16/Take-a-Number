@@ -258,12 +258,13 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                             toSend = toSend + "0,";
                         }
                     }
+                    counter++;
                 }
                 SendfeedbackJob job = new SendfeedbackJob();
                 job.execute(toSend, "" + staticChecks);
 
                 //TODO need to check if this is an appropriate way of doing receiving message from the server
-                System.out.println(toSend);
+                System.out.println("INFO-checkpointSync Button :" + toSend);
 
                 while (job.getMergeResult().equals(""))
                 {
@@ -273,7 +274,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
 //                System.out.println("BEFORE: " + toSend);
 //                String mergeResult = "CHECKPOINT#sessionid#micah alconcel,1,1,1#teolo agne,1,1,1#matthew farr,1,1,1#nick sohm,1,1,1#andrew vegdahl,1,1,1#steven nuxoll,1,1,1#fenne kin,1,1,1#howe ewe doin,1,1,0";
-                updateCheckpoints(serverResponse);
+                if (!serverResponse.equals(""))
+                {
+                    updateCheckpoints(serverResponse);
+                }
 
             }
         });
@@ -348,14 +352,15 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         for (int i = 2; i < initSplit.length; i++)
         {
             String[] currentList = initSplit[i].split(",");
-            for (int j = 1; j < staticChecks + 1; j++)
+            for (int j = 3; j < currentList.length; j++)
             {
-                int secondDigit = j - 1;
+                int secondDigit = j - 2;
                 String id = "" + counter + secondDigit;
                 if (currentList[j].equals("1"))
                 {
                     checkpointSaved.put(id, true);
-                } else
+                }
+                else
                 {
                     checkpointSaved.put(id, false);
                 }
@@ -429,8 +434,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
-                System.out.println(message2);
+                System.out.println("INFO-message being sent to server: " + message2);
                 out.println(message2);
+                out.println("");
             }
             catch (UnknownHostException e)
             {
@@ -449,10 +455,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
                     x = dataInputStream.readLine();
                     receivedMessage = x;
-                    System.out.println(x);
+                    System.out.println("INFO response from server: " + x);
 
                     //mergeee
 
+                    //TODO we're getting some wonky stuff after sync.
+                    //Where is the checkpoint update stuff
 
                     if (x.equals(""))
                     {
