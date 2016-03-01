@@ -231,7 +231,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 //convert into format then send to server
 
-                //format is: CHECKPOINT#SESSION ID#IP ADDRESS#rest
+                //format is: CHECKPOINT#SESSION ID#rest
                 String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
 
                 //convert the contents into the proper format
@@ -430,7 +430,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             try
             {
                 //socket = new Socket("10.17.3.72", 8080);
-                socket = new Socket("192.168.1.144", 8080);
+                socket = new Socket(MainActivity.IP, MainActivity.port);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
                 out = new PrintWriter(socket.getOutputStream(), true);
@@ -548,4 +548,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             return mergeResult;
         }
     }
+
+
 }
+

@@ -1,6 +1,7 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,7 +14,16 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 public class MainActivity extends AppCompatActivity {
+    final static String IP = "192.168.1.144";
+    final static int port = 8080;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,11 +147,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //TODO - double check the control flow of this - will we go to importactivity first?
     //if they're loading a sessionID
     public void moveToImport(String sessionID){
         Intent intentMain = new Intent(MainActivity.this,
-                ImportActivity.class);
+                CheckpointsActivity.class);
         intentMain.putExtra("session", sessionID);
+
+        SendfeedbackJob job = new SendfeedbackJob();
+        job.execute(sessionID);
+        while(job.getServerResponse().equals("")){
+            //wait for server response
+        }
+        String params = job.getServerResponse();
+        //TODO figure out how server response is formatted so we can parse it and pass the data to the other tabs
 
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
@@ -164,5 +183,82 @@ public class MainActivity extends AppCompatActivity {
 
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
+    }
+
+    private class SendfeedbackJob extends AsyncTask<String, Void, String>
+    {
+        String message2 = "";
+        String outMessage = "";
+        String serverResponse = "";
+        PrintWriter out;
+
+        @Override
+        protected String doInBackground(String[] params)
+        {
+            Socket socket = null;
+            DataOutputStream dataOutputStream = null;
+            DataInputStream dataInputStream = null;
+            try
+            {
+                socket = new Socket(MainActivity.IP, MainActivity.port);
+                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataInputStream = new DataInputStream(socket.getInputStream());
+
+                outMessage = params[0];
+                out = new PrintWriter(socket.getOutputStream(), true);
+                out.println(outMessage);
+                out.println("");
+            }
+            catch (UnknownHostException e)
+            {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            String x = "";
+            try
+            {
+                while (true)
+                {
+                    x = "";
+
+                    x = dataInputStream.readLine();
+                    System.out.println(x);
+
+
+                    if (x.equals(""))
+                    {
+                        dataInputStream.close();
+                        dataOutputStream.close();
+                        socket.close();
+                        out.println("");
+                        System.out.println("CLOSING AHHHHHHHHH");
+                        break;
+                    }
+                    else{
+                        //means they sent us data, rather than the closing message
+                        serverResponse = x;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            return x;
+        }
+
+        @Override
+        protected void onPostExecute(String message)
+        {
+            message2 = message;
+        }
+
+        protected String getServerResponse(){
+            return serverResponse;
+        }
     }
 }

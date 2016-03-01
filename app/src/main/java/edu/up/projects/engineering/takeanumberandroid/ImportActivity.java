@@ -141,8 +141,25 @@ public class ImportActivity extends AppCompatActivity
         if (sessionID != null)
         {
             //handler if they input a sessionID
+            Intent intentMain = new Intent(ImportActivity.this,
+                    CheckpointsActivity.class);
+
             SendfeedbackJob job = new SendfeedbackJob();
             job.execute("sessionRetrieve#" + sessionID);
+//            while(job.getServerResponse().equals("")){
+//                //wait for server response
+//            }
+//            String response = job.getServerResponse();
+//            //TODO parse data to send to checkpointsactivity. hardcoding stuff right now.
+//            //layout, roster, numchecks, session needs to be parsed from server response
+//            String roster = "";
+//            int[] layout = {0,0,0,0};
+//            intentMain.putExtra("layout", layout);
+//            intentMain.putExtra("roster", roster);
+//            intentMain.putExtra("numChecks", 5);
+//            intentMain.putExtra("session", sessionID);
+//            ImportActivity.this.startActivity(intentMain);
+
 
         } else if (layoutParams != null)
         {
@@ -167,7 +184,8 @@ public class ImportActivity extends AppCompatActivity
 
                 final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
                 intentMain.putExtra("numChecks", numberOfCheckpoints);
-                ImportActivity.this.startActivity(intentMain);
+                //TODO - is sessionID given by server?
+                intentMain.putExtra("session", sessionID);
 
                 SendfeedbackJob job = new SendfeedbackJob();
                 String outMessage = "checkpointInit#";
@@ -191,6 +209,7 @@ public class ImportActivity extends AppCompatActivity
                     outMessage += checkpoints;
                 }
                 job.execute(outMessage);
+                ImportActivity.this.startActivity(intentMain);
             }
         });
         //the list of all files in the project folder
@@ -345,6 +364,7 @@ public class ImportActivity extends AppCompatActivity
     {
         String message2 = "";
         String outMessage = "";
+        String serverResponse = "";
         PrintWriter out;
 
         @Override
@@ -355,7 +375,7 @@ public class ImportActivity extends AppCompatActivity
             DataInputStream dataInputStream = null;
             try
             {
-                socket = new Socket("192.168.1.144", 8080);
+                socket = new Socket(MainActivity.IP, MainActivity.port);
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 dataInputStream = new DataInputStream(socket.getInputStream());
 
@@ -392,6 +412,10 @@ public class ImportActivity extends AppCompatActivity
                         System.out.println("CLOSING AHHHHHHHHH");
                         break;
                     }
+                    else{
+                        //means they sent us data, rather than the closing message
+                        serverResponse = x;
+                    }
                 }
             }
             catch (Exception e)
@@ -406,6 +430,10 @@ public class ImportActivity extends AppCompatActivity
         protected void onPostExecute(String message)
         {
             message2 = message;
+        }
+
+        protected String getServerResponse(){
+            return serverResponse;
         }
     }
 }
