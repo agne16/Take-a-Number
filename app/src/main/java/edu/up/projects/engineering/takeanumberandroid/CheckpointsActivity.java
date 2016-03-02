@@ -108,6 +108,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         LinearLayout rows = (LinearLayout) findViewById(R.id.checkRows);
 
 
+        
         final String[] rooster = staticRoster.split("\\r?\\n");
         String[] studentNames = new String[rooster.length];
         String[] studentIds = new String[rooster.length];
@@ -272,8 +273,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 }
 
 
-//                System.out.println("BEFORE: " + toSend);
-//                String mergeResult = "CHECKPOINT#sessionid#micah alconcel,1,1,1#teolo agne,1,1,1#matthew farr,1,1,1#nick sohm,1,1,1#andrew vegdahl,1,1,1#steven nuxoll,1,1,1#fenne kin,1,1,1#howe ewe doin,1,1,0";
                 if (!serverResponse.equals(""))
                 {
                     updateCheckpoints(serverResponse);
@@ -352,6 +351,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         for (int i = 2; i < initSplit.length; i++)
         {
             String[] currentList = initSplit[i].split(",");
+            //3 = start of checkpoints
             for (int j = 3; j < currentList.length; j++)
             {
                 int secondDigit = j - 2;

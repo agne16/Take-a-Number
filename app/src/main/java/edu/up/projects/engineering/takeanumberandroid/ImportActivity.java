@@ -1,12 +1,9 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,34 +12,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-// NICK TESTING SOCKET STUFF
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.app.Activity;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 
 public class ImportActivity extends AppCompatActivity
 {
@@ -53,14 +39,6 @@ public class ImportActivity extends AppCompatActivity
     private String courseSection;
     private String courseName;
     EditText rosterPreview;
-    // NICK
-    EditText textOut;
-    TextView textIn;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
 
     @Override
@@ -77,7 +55,7 @@ public class ImportActivity extends AppCompatActivity
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
         rosterPreview = (EditText) findViewById(R.id.nameList);
         Button createButton = (Button) findViewById(R.id.createButton);
-        Button saveButton = (Button) findViewById(R.id.saveButton);
+        Button saveButton = (Button) findViewById(R.id.saveButton); //not implemented yet
         Spinner selectCSV = (Spinner) findViewById(R.id.selectCSV);
 
 
@@ -138,30 +116,7 @@ public class ImportActivity extends AppCompatActivity
         }
 
 
-        if (sessionID != null)
-        {
-            //handler if they input a sessionID
-            Intent intentMain = new Intent(ImportActivity.this,
-                    CheckpointsActivity.class);
-
-            SendfeedbackJob job = new SendfeedbackJob();
-            job.execute("sessionRetrieve#" + sessionID);
-//            while(job.getServerResponse().equals("")){
-//                //wait for server response
-//            }
-//            String response = job.getServerResponse();
-//            //TODO parse data to send to checkpointsactivity. hardcoding stuff right now.
-//            //layout, roster, numchecks, session needs to be parsed from server response
-//            String roster = "";
-//            int[] layout = {0,0,0,0};
-//            intentMain.putExtra("layout", layout);
-//            intentMain.putExtra("roster", roster);
-//            intentMain.putExtra("numChecks", 5);
-//            intentMain.putExtra("session", sessionID);
-//            ImportActivity.this.startActivity(intentMain);
-
-
-        } else if (layoutParams != null)
+        if (layoutParams != null)
         {
             //handler if they input layout parameters
             //0 = left row, 1 = right row, 2 = left cols, 3 = right cols
@@ -212,15 +167,14 @@ public class ImportActivity extends AppCompatActivity
                 ImportActivity.this.startActivity(intentMain);
             }
         });
-        //the list of all files in the project folder
-        List<File> spinnerArray = new ArrayList<File>();
+
         //decided to make the specified folder "Tan" and it should be in the root of the device
-        File csvFolder = new File("/sdcard/TAN");
+        File csvFolder = new File(Environment.getExternalStorageDirectory().getPath() +"/TAN");
         File[] csvList = csvFolder.listFiles();
 
         if (csvList != null)
         {
-            ArrayAdapter<File> adapter = new ArrayAdapter<File>(
+            ArrayAdapter<File> adapter = new ArrayAdapter<>(
                     this, android.R.layout.simple_spinner_item, csvList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             final Spinner sItems = (Spinner) findViewById(R.id.selectCSV);
@@ -238,7 +192,7 @@ public class ImportActivity extends AppCompatActivity
                     }
                     catch (IOException noFile)
                     {
-
+                        noFile.printStackTrace();
                     }
                     rosterPreview.setText(cont);
 
@@ -252,10 +206,10 @@ public class ImportActivity extends AppCompatActivity
                 }
 
             });
-            String selected = sItems.getSelectedItem().toString();
-            if (selected.equals("what ever the option was"))
-            {
-            }
+           // String selected = sItems.getSelectedItem().toString();
+//            if (selected.equals("what ever the option was"))
+//            {
+//            }
             File selected2 = (File) selectCSV.getSelectedItem();
             try
             {
@@ -268,18 +222,13 @@ public class ImportActivity extends AppCompatActivity
             }
             catch (Exception e)
             {
-
+                e.printStackTrace();
             }
             rosterPreview.setText(content);
         } else
         {
             rosterPreview.setText("NO CSV FILES FOUND");
         }
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
@@ -317,47 +266,9 @@ public class ImportActivity extends AppCompatActivity
         rosterPreview.setText(roster);
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Import Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://edu.up.projects.engineering.takeanumberandroid/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
 
-    @Override
-    public void onStop()
-    {
-        super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Import Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://edu.up.projects.engineering.takeanumberandroid/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
 
 
     private class SendfeedbackJob extends AsyncTask<String, Void, String>

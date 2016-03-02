@@ -22,8 +22,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MainActivity extends AppCompatActivity {
+    //to make code more readable
     final static String IP = "192.168.1.144";
     final static int port = 8080;
+    final int startOfCheckpoints = 1;
+    final int upIdIndex = 0;
+    final int firstNameIndex = 1;
+    final int lastNameIndex = 2;
+    final int firstCheckpointIndex = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,8 +153,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO - double check the control flow of this - will we go to importactivity first?
-    //if they're loading a sessionID
+    /**
+     * moveToImport - (given session id) actually skips ImportActivity and goes straight to Checkpoints page, with parameters from server
+     * @param sessionID - the id that we're trying to load (entered by the TA or professor)
+     */
     public void moveToImport(String sessionID){
         Intent intentMain = new Intent(MainActivity.this,
                 CheckpointsActivity.class);
@@ -160,8 +168,36 @@ public class MainActivity extends AppCompatActivity {
             //wait for server response
         }
         String params = job.getServerResponse();
-        //TODO figure out how server response is formatted so we can parse it and pass the data to the other tabs
 
+
+        //TODO double check format
+        //right now, assuming it is:
+        //session id#upid,firstname,lastname,1,1,1....
+        String[] initSplit = params.split("#");
+        String roster = "";
+        int firstDigit = 1, secondDigit = 1;
+        int numChecks = 0;
+        for(int i = startOfCheckpoints; i<initSplit.length;i++){
+            String[] currentRow = initSplit[i].split(",");
+            roster += currentRow[upIdIndex] + "," + currentRow[firstNameIndex] + "," + currentRow[lastNameIndex] + "\n";
+            for(int j = firstCheckpointIndex;j<currentRow.length;j++){
+                CheckpointsActivity.checkpointSaved.put("lol", true);
+                String id = "" + firstDigit + "" + secondDigit;
+                if(currentRow[j].equals("1")){
+                    CheckpointsActivity.checkpointSaved.put(id, true);
+                }
+                else{
+                    CheckpointsActivity.checkpointSaved.put(id, false);
+                }
+                secondDigit++;
+                numChecks = currentRow.length - firstCheckpointIndex;
+            }
+            firstDigit++;
+        }
+
+        //TODO will need to eventually also handle layout parameters coming from the server
+        intentMain.putExtra("numChecks", numChecks);
+        intentMain.putExtra("roster", roster);
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
     }
