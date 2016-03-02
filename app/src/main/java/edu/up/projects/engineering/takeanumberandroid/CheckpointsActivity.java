@@ -108,7 +108,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         LinearLayout rows = (LinearLayout) findViewById(R.id.checkRows);
 
 
-        
         final String[] rooster = staticRoster.split("\\r?\\n");
         String[] studentNames = new String[rooster.length];
         String[] studentIds = new String[rooster.length];
@@ -177,7 +176,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 if (checkpointSaved.get(id) == null)
                 {
                     checkpointSaved.put(id, false);
-                } else
+                }
+                else
                 {
                     check.setChecked(checkpointSaved.get(id));
                 }
@@ -254,7 +254,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                         {
                             //checkpoint#
                             toSend = toSend + "1,";
-                        } else
+                        }
+                        else
                         {
                             toSend = toSend + "0,";
                         }
@@ -301,7 +302,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                             if (y.isChecked())
                             {
                                 writer.print("1, ");
-                            } else
+                            }
+                            else
                             {
                                 writer.print("0, ");
                             }
@@ -473,7 +475,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                         //AHHHHHHHHHHHHHHHH!!! CLOSING!
                         System.out.println("CLOSING AHHHHHHHHH");
                         break;
-                    } else
+                    }
+                    else
                     {
                         //this means we received the checkpoint update from the server
                         mergeResult = x;
@@ -534,7 +537,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     if (parsedMine[j].equals("1") || parsedServer[j].equals("1"))
                     {
                         mergeResult[i - 2] = mergeResult[i - 2] + ",1";
-                    } else
+                    }
+                    else
                     {
                         mergeResult[i - 2] = mergeResult[i - 2] + ",0";
                     }

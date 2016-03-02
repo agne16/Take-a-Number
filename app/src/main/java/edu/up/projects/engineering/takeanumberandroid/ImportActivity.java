@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 public class ImportActivity extends AppCompatActivity
 {
     String sessionID;
@@ -120,7 +118,8 @@ public class ImportActivity extends AppCompatActivity
         {
             //handler if they input layout parameters
             //0 = left row, 1 = right row, 2 = left cols, 3 = right cols
-        } else
+        }
+        else
         {
             //handler for if they chose a preset lab session
 
@@ -145,6 +144,8 @@ public class ImportActivity extends AppCompatActivity
                 SendfeedbackJob job = new SendfeedbackJob();
                 String outMessage = "checkpointInit#";
                 String checkpoints = "";
+
+                //TODO pull from static hashtable
                 for (int i = 0; i < numberOfCheckpoints; i++)
                 {
                     checkpoints += ",0";
@@ -169,7 +170,7 @@ public class ImportActivity extends AppCompatActivity
         });
 
         //decided to make the specified folder "Tan" and it should be in the root of the device
-        File csvFolder = new File(Environment.getExternalStorageDirectory().getPath() +"/TAN");
+        File csvFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/TAN");
         File[] csvList = csvFolder.listFiles();
 
         if (csvList != null)
@@ -206,7 +207,7 @@ public class ImportActivity extends AppCompatActivity
                 }
 
             });
-           // String selected = sItems.getSelectedItem().toString();
+            // String selected = sItems.getSelectedItem().toString();
 //            if (selected.equals("what ever the option was"))
 //            {
 //            }
@@ -225,7 +226,8 @@ public class ImportActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             rosterPreview.setText(content);
-        } else
+        }
+        else
         {
             rosterPreview.setText("NO CSV FILES FOUND");
         }
@@ -265,10 +267,6 @@ public class ImportActivity extends AppCompatActivity
     {
         rosterPreview.setText(roster);
     }
-
-
-
-
 
 
     private class SendfeedbackJob extends AsyncTask<String, Void, String>
@@ -323,7 +321,8 @@ public class ImportActivity extends AppCompatActivity
                         System.out.println("CLOSING AHHHHHHHHH");
                         break;
                     }
-                    else{
+                    else
+                    {
                         //means they sent us data, rather than the closing message
                         serverResponse = x;
                     }
@@ -343,7 +342,8 @@ public class ImportActivity extends AppCompatActivity
             message2 = message;
         }
 
-        protected String getServerResponse(){
+        protected String getServerResponse()
+        {
             return serverResponse;
         }
     }
