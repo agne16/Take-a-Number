@@ -359,10 +359,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 int secondDigit = j - 2;
                 String id = "" + counter + secondDigit;
-                System.out.println(id);
                 if (currentList[j].equals("1"))
                 {
-                    System.out.println("CHECK");
                     checkpointSaved.put(id, true);
                 }
                 else

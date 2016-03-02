@@ -70,7 +70,8 @@
         android:text="insert here"
         android:layout_alignTop="@+id/idCheckText"
         android:layout_alignLeft="@+id/setupButton"
-        android:layout_alignStart="@+id/setupButton" />
+        android:layout_alignStart="@+id/setupButton"
+        android:inputType="textCapCharacters" />
 
     <Button
         android:layout_width="wrap_content"
