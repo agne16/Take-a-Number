@@ -64,6 +64,7 @@ public class ImportActivity extends AppCompatActivity
             {
                 Intent intentMain = new Intent(ImportActivity.this,
                         MainActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -76,6 +77,7 @@ public class ImportActivity extends AppCompatActivity
             {
                 Intent intentMain = new Intent(ImportActivity.this,
                         QueueActivity2.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -88,6 +90,7 @@ public class ImportActivity extends AppCompatActivity
             {
                 Intent intentMain = new Intent(ImportActivity.this,
                         CheckpointsActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -165,6 +168,7 @@ public class ImportActivity extends AppCompatActivity
                     outMessage += checkpoints;
                 }
                 job.execute(outMessage);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
             }
         });

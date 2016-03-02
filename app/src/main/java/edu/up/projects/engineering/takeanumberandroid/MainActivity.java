@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intentMain = new Intent(MainActivity.this,
                         QueueActivity2.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 MainActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intentMain = new Intent(MainActivity.this,
                         CheckpointsActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 MainActivity.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -190,8 +192,7 @@ public class MainActivity extends AppCompatActivity
         }
         String params = job.getServerResponse();
 
-    System.out.println(params);
-        //TODO double check format
+        System.out.println(params);
         //right now, assuming it is:
         //session id#upid,firstname,lastname,1,1,1....
         String[] initSplit = params.split("#");
@@ -227,6 +228,7 @@ public class MainActivity extends AppCompatActivity
         //TODO will need to eventually also handle layout parameters coming from the server
         intentMain.putExtra("numChecks", numChecks);
         intentMain.putExtra("roster", roster);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
     }
@@ -237,6 +239,7 @@ public class MainActivity extends AppCompatActivity
         Intent intentMain = new Intent(MainActivity.this,
                 ImportActivity.class);
         intentMain.putExtra("layout", layouts);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
@@ -247,7 +250,7 @@ public class MainActivity extends AppCompatActivity
     {
         Intent intentMain = new Intent(MainActivity.this,
                 ImportActivity.class);
-
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
     }

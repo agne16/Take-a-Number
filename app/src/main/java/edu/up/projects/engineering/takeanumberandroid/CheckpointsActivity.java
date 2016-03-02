@@ -197,6 +197,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         MainActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 CheckpointsActivity.this.startActivity(intentMain);
 
             }
@@ -209,6 +210,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         QueueActivity2.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 CheckpointsActivity.this.startActivity(intentMain);
 
             }
@@ -221,6 +223,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 Intent intentMain = new Intent(CheckpointsActivity.this,
                         CheckpointsActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 CheckpointsActivity.this.startActivity(intentMain);
 
             }
@@ -371,6 +374,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         }
         Intent intentMain = new Intent(CheckpointsActivity.this,
                 CheckpointsActivity.class);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         CheckpointsActivity.this.startActivity(intentMain);
 
     }

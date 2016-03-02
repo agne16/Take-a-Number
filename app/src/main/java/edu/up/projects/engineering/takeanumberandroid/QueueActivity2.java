@@ -42,6 +42,7 @@ int[] layoutParams;
             public void onClick(View view) {
                 Intent intentMain = new Intent(QueueActivity2.this,
                         MainActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 QueueActivity2.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
@@ -58,6 +59,7 @@ int[] layoutParams;
             public void onClick(View view) {
                 Intent intentMain = new Intent(QueueActivity2.this,
                         CheckpointsActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 QueueActivity2.this.startActivity(intentMain);
                 Log.i("Content ", " Main layout ");
             }
