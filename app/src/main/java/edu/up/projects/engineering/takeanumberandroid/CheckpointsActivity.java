@@ -114,7 +114,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         int index = 0;
         for (String x : rooster)
         {
-
             String[] temp = x.split(",");
             studentIds[index] = temp[0].trim();
             studentNames[index] = temp[1] + temp[2];
@@ -147,8 +146,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         //create a row for each name in the list
         int counter = 1;
 
-        //only recreate checkList if it's null
 
+        System.out.println("BEFORE: =============================================================");
+        System.out.println(checkpointSaved.toString());
 
         checkList = new CheckBox[rooster.length][];
         for (String x : rooster)
@@ -158,7 +158,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             CheckBox[] checkRow = new CheckBox[staticChecks];
             for (int i = 0; i < staticChecks; i++)
             {
-                String id = "" + counter + "" + i;
+                String id = "" + counter + "" + i+1;
                 CheckBox check = new CheckBox(this);
                 check.setOnClickListener(this);
                 check.setOnLongClickListener(this);
@@ -176,6 +176,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 if (checkpointSaved.get(id) == null)
                 {
                     checkpointSaved.put(id, false);
+                    check.setChecked(false);
                 }
                 else
                 {
@@ -186,6 +187,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             counter++;
             rows.addView(column);
         }
+        System.out.println("AFTER: =============================================================");
+        System.out.println(checkpointSaved.toString());
 
 
         //these listeners are for the three buttons at the top
@@ -272,12 +275,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 {
                     //wait until server delivers the goods
                 }
-
-
-                if (!serverResponse.equals(""))
-                {
-                    updateCheckpoints(serverResponse);
-                }
+                System.out.println(job.getMergeResult());
+                    updateCheckpoints(job.getMergeResult());
 
             }
         });
@@ -350,6 +349,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         //checkpoints should start at 2
         //TODO clarify whether the name is split into first, last
         //TODO double check format
+        //checkpoint#session id#id,firstname,lastname,1,1,1,....#id,firstname,lastname,
         for (int i = 2; i < initSplit.length; i++)
         {
             String[] currentList = initSplit[i].split(",");
@@ -358,8 +358,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 int secondDigit = j - 2;
                 String id = "" + counter + secondDigit;
+                System.out.println(id);
                 if (currentList[j].equals("1"))
                 {
+                    System.out.println("CHECK");
                     checkpointSaved.put(id, true);
                 }
                 else
@@ -498,53 +500,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         {
             serverResponse = message;
 
-        }
-
-        /**
-         * mergeTwo - a function that merges two Strings (that should represent checkpoint lists) into one
-         * format of the string should be CHECKPOINT#SESSION ID#name,cp1,cp2...#name,cp1,cp2... etc
-         *
-         * @param mine    - the string the tablet sent
-         * @param servers - the string stored on the server
-         */
-        public void mergeTwo(String mine, String servers)
-        {
-            String[] myFields = mine.split("#");
-            String[] serverFields = servers.split("#");
-            String serversChecks = serverFields[2];
-
-
-            //merge them
-            //ignoring freshly checked for now
-
-            String[] mergeResult = new String[rosterLength];
-
-            //index 0 = type of message, index 1 = session id, everything else = checkpoint info for each student
-            for (int i = 2; i < myFields.length; i++)
-            {
-                //should be of format fullname,cp1,cp2...
-                String myCurrent = myFields[i];
-
-                //index 0 = name, everything else = checkpoint info
-                String[] parsedMine = myCurrent.split(",");
-                String[] parsedServer = serversChecks.split(",");
-
-                //should be the name
-                mergeResult[i - 2] = parsedMine[0];
-
-                for (int j = 1; j < numChecks + 1; j++)
-                {
-                    if (parsedMine[j].equals("1") || parsedServer[j].equals("1"))
-                    {
-                        mergeResult[i - 2] = mergeResult[i - 2] + ",1";
-                    }
-                    else
-                    {
-                        mergeResult[i - 2] = mergeResult[i - 2] + ",0";
-                    }
-                }
-                mergeResult[i - 2] = mergeResult[i - 2] + "#";
-            }
         }
 
         public String getMergeResult()
