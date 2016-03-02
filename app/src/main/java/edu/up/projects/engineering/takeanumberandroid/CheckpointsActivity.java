@@ -67,7 +67,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 //placeholder
                 //maaaaybe remove before release?
-                staticRoster = "Micah, Alconcel \n Teolo, Agne \n Matthew, Farr \n Nick, Sohm \n Andrew, Vegdahl \n Steven, Nuxoll";
+                staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll";
             }
         }
 
@@ -147,8 +147,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         int counter = 1;
 
 
-        System.out.println("BEFORE: =============================================================");
-        System.out.println(checkpointSaved.toString());
+
 
         checkList = new CheckBox[rooster.length][];
         for (String x : rooster)
@@ -158,7 +157,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             CheckBox[] checkRow = new CheckBox[staticChecks];
             for (int i = 0; i < staticChecks; i++)
             {
-                String id = "" + counter + "" + i+1;
+                int secondDigit = i+1;
+                String id = "" + counter + "" + secondDigit;
                 CheckBox check = new CheckBox(this);
                 check.setOnClickListener(this);
                 check.setOnLongClickListener(this);
@@ -187,8 +187,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             counter++;
             rows.addView(column);
         }
-        System.out.println("AFTER: =============================================================");
-        System.out.println(checkpointSaved.toString());
 
 
         //these listeners are for the three buttons at the top

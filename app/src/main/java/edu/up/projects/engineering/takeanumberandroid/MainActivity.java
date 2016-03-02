@@ -20,13 +20,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity
 {
     //to make code more readable
     final static String IP = "10.12.102.211";
     final static int port = 8080;
-    final int startOfCheckpoints = 1;
+    final int startOfCheckpoints = 2;
     final int upIdIndex = 0;
     final int firstNameIndex = 1;
     final int lastNameIndex = 2;
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         }
         String params = job.getServerResponse();
 
-
+    System.out.println(params);
         //TODO double check format
         //right now, assuming it is:
         //session id#upid,firstname,lastname,1,1,1....
@@ -203,8 +204,11 @@ public class MainActivity extends AppCompatActivity
             roster += currentRow[upIdIndex] + "," + currentRow[firstNameIndex] + "," + currentRow[lastNameIndex] + "\n";
             for (int j = firstCheckpointIndex; j < currentRow.length; j++)
             {
-                CheckpointsActivity.checkpointSaved.put("lol", true);
+                if(CheckpointsActivity.checkpointSaved == null){
+                    CheckpointsActivity.checkpointSaved = new Hashtable<String, Boolean>();
+                }
                 String id = "" + firstDigit + "" + secondDigit;
+                System.out.println(id);
                 if (currentRow[j].equals("1"))
                 {
                     CheckpointsActivity.checkpointSaved.put(id, true);
@@ -217,6 +221,7 @@ public class MainActivity extends AppCompatActivity
                 numChecks = currentRow.length - firstCheckpointIndex;
             }
             firstDigit++;
+            secondDigit = 1;
         }
 
         //TODO will need to eventually also handle layout parameters coming from the server
