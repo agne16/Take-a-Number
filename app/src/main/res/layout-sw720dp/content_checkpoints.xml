@@ -43,7 +43,9 @@
         android:id="@+id/rosterList"
         android:layout_below="@+id/setupButton"
         android:layout_toStartOf="@+id/setupButton"
-        android:layout_marginTop="51dp" />
+        android:layout_marginTop="51dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <HorizontalScrollView
         android:layout_width="wrap_content"

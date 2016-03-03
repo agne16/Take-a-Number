@@ -156,6 +156,8 @@ public class ImportActivity extends AppCompatActivity
 
                 String labNumber = "01";//TODO lab number hardcoded for now
                 String rosterString = content;
+                System.out.println("AYYY");
+
                 outMessage += courseId + "," + courseSection + "," + labNumber + "," + courseName + "," + numberOfCheckpoints;
                 String[] studentNames = rosterString.split("\\n");
                 for (String s : studentNames)
@@ -176,7 +178,6 @@ public class ImportActivity extends AppCompatActivity
         //decided to make the specified folder "Tan" and it should be in the root of the device
         File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
-        System.out.println("/sdcard/TAN");
         for(File x : csvList){
             System.out.println(x);
         }
@@ -227,6 +228,7 @@ public class ImportActivity extends AppCompatActivity
                 courseSection = fileName.split("-")[0].substring(5);
                 courseName = fileName.split("-")[1].split("\\.")[0];
                 content = readFile(selected2.toString());
+                System.out.println(content);
             }
             catch (Exception e)
             {
