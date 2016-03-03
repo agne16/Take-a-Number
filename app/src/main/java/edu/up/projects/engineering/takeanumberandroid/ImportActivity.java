@@ -174,9 +174,12 @@ public class ImportActivity extends AppCompatActivity
         });
 
         //decided to make the specified folder "Tan" and it should be in the root of the device
-        File csvFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/TAN");
+        File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
-
+        System.out.println("/sdcard/TAN");
+        for(File x : csvList){
+            System.out.println(x);
+        }
         if (csvList != null)
         {
             ArrayAdapter<File> adapter = new ArrayAdapter<>(

@@ -67,17 +67,22 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 //placeholder
                 //maaaaybe remove before release?
-                staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll,alconcel16,Micah, Alconcel \n" +
+                staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll \n" +
                         " agne16,Teolo, Agne \n" +
                         " farr16,Matthew, Farr \n" +
                         " sohm16,Nick, Sohm \n" +
                         " vegdahl,Andrew, Vegdahl \n" +
-                        " nuxoll,Steven, Nuxoll,alconcel16,Micah, Alconcel \n" +
+                        " nuxoll,Steven, Nuxoll\n" +
                         " agne16,Teolo, Agne \n" +
                         " farr16,Matthew, Farr \n" +
                         " sohm16,Nick, Sohm \n" +
                         " vegdahl,Andrew, Vegdahl \n" +
-                        " nuxoll,Steven, Nuxoll";
+                        " nuxoll,Steven, Nuxoll \n"+
+                        "fennekin, fennekin, fennekin \n" +
+                        "fennekin, fennekin, fennekin \n" +
+                        "fennekin, fennekin, fennekin \n" +
+                        "fennekin, fennekin, fennekin \n";
+                ;
             }
         }
 
@@ -129,12 +134,27 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             studentNames[index] = temp[1] + temp[2];
             index++;
         }
+        int botMar = 17;
+        boolean isSmall = true;
+            CheckBox che = (CheckBox) findViewById(R.id.smallSize);
+        if(che == null){
+            isSmall = false;
+        }
 
+        if(!isSmall){
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    this, android.R.layout.simple_list_item_1, studentNames);
+            adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+            theRoster.setAdapter(adapter);
+        }
+        else{
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    this, R.layout.mylist, studentNames);
+            adapter.setDropDownViewResource(R.layout.mylist);
+            theRoster.setAdapter(adapter);
+            botMar = 8;
+        }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, studentNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-        theRoster.setAdapter(adapter);
 
         //initialize it to a completely empty checkbox at the beginning
         if (lastUpdated == null)
@@ -174,7 +194,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 check.setOnLongClickListener(this);
                 LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 //left, top, right, bottom margins
-                par.setMargins(5, 0, 5, 10);
+                par.setMargins(5, 0, 5, botMar);
 
                 check.setLayoutParams(par);
                 //give each checkbox a unique id so we can access it when it's time to output
@@ -279,7 +299,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 SendfeedbackJob job = new SendfeedbackJob();
                 job.execute(toSend, "" + staticChecks);
 
-                //TODO need to check if this is an appropriate way of doing receiving message from the server
                 System.out.println("INFO-checkpointSync Button :" + toSend);
 
                 while (job.getMergeResult().equals(""))
@@ -301,7 +320,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 //convert into csv then save to folder here
                 try
                 {
-                    PrintWriter writer = new PrintWriter("/sdcard/TAN/abc.txt");
+                    PrintWriter writer = new PrintWriter("/sdcard/TAN/abc.csv");
                     int counter = 0;
                     for (String x : rooster)
                     {
