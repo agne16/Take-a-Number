@@ -67,7 +67,17 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             {
                 //placeholder
                 //maaaaybe remove before release?
-                staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll";
+                staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll,alconcel16,Micah, Alconcel \n" +
+                        " agne16,Teolo, Agne \n" +
+                        " farr16,Matthew, Farr \n" +
+                        " sohm16,Nick, Sohm \n" +
+                        " vegdahl,Andrew, Vegdahl \n" +
+                        " nuxoll,Steven, Nuxoll,alconcel16,Micah, Alconcel \n" +
+                        " agne16,Teolo, Agne \n" +
+                        " farr16,Matthew, Farr \n" +
+                        " sohm16,Nick, Sohm \n" +
+                        " vegdahl,Andrew, Vegdahl \n" +
+                        " nuxoll,Steven, Nuxoll";
             }
         }
 

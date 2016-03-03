@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/nameList"
                 android:editable="false"
-                android:text="Names go HEAH\nokay" />
+                android:text="Names go HEAH\nokay\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy" />
         </LinearLayout>
     </ScrollView>
 
