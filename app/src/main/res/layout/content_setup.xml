@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sessionID"
-        android:text="insert here"
+        android:text="HERE"
         android:layout_alignTop="@+id/idCheckText"
         android:layout_alignLeft="@+id/setupButton"
         android:layout_alignStart="@+id/setupButton"

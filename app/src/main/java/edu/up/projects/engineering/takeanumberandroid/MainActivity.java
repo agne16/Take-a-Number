@@ -26,7 +26,7 @@ import java.util.Hashtable;
 public class MainActivity extends AppCompatActivity
 {
     //to make code more readable
-    final static String IP = "10.12.102.211";
+    final static String IP = "10.17.3.72";
     final static int port = 8080;
     final int startOfCheckpoints = 2;
     final int upIdIndex = 0;

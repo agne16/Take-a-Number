@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/nameList"
                 android:editable="false"
-                android:text="Names go HEAH\nokay" />
+                android:text="Names will\nappear here" />
         </LinearLayout>
     </ScrollView>
 
@@ -126,7 +126,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/numChecks"
-        android:text="0"
+        android:text="5"
         android:layout_below="@+id/selectCSV"
         android:layout_alignLeft="@+id/selectCSV"
         android:layout_alignStart="@+id/selectCSV" />
