@@ -15,7 +15,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="QUEUE"
+        android:text="@string/queue_button"
         android:id="@+id/queueButton"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -23,7 +23,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SET-UP"
+        android:text="@string/setup_button"
         android:id="@+id/setupButton"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/queueButton"
@@ -32,7 +32,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHECKPOINTS"
+        android:text="@string/checkpoints_button"
         android:id="@+id/checkpointsButton"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/queueButton"
