@@ -91,7 +91,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/setupButton"
         android:layout_alignRight="@+id/checkContainer"
-        android:layout_alignEnd="@+id/checkContainer"></LinearLayout>
+        android:layout_alignEnd="@+id/checkContainer" />
 
     <CheckBox
         android:layout_width="wrap_content"
