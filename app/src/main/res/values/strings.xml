@@ -5,4 +5,24 @@
     <string name="title_activity_setup">SetupActivity</string>
     <string name="title_activity_checkpoints">CheckpointsActivity</string>
     <string name="title_activity_import">ImportActivity</string>
+    <string name="queue_button">QUEUE</string>
+    <string name="setup_button">SET-UP</string>
+    <string name="checkpoints_button">CHECKPOINTS</string>
+    <string name="importRoster_button">Import Class Roster</string>
+    <string name="selectCSV_label">Select input file (.csv)</string>
+    <string name="preview_label">Preview of Names in File</string>
+    <string name="sync_button">Sync</string>
+    <string name="export_button">EXPORT</string>
+    <string name="numberOfCheckpoints_label">Number of Checkpoints</string>
+    <string name="save_button">SAVE</string>
+    <string name="create_button">CREATE</string>
+    <string name="loadLabSession_label">Load Lab Session:</string>
+    <string name="sessionId_label">Session ID:</string>
+    <string name="load_button">LOAD</string>
+    <string name="createLayout_label">Create Layout</string>
+    <string name ="presetLayouts_label">Pre-Set Layouts:</string>
+    <string name="leftRows_label">Left Rows:</string>
+    <string name="rightRows_label">Right Rows:</string>
+    <string name="leftColumns_label">Left Columns:</string>
+    <string name="rightColumns_label">Right Columns:</string>
 </resources>

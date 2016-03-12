@@ -15,7 +15,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="QUEUE"
+        android:text="@string/queue_button"
         android:id="@+id/queueButton"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -23,7 +23,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SET-UP"
+        android:text="@string/setup_button"
         android:id="@+id/setupButton"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/queueButton"
@@ -32,7 +32,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CHECKPOINTS"
+        android:text="@string/checkpoints_button"
         android:id="@+id/checkpointsButton"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/queueButton"
@@ -45,7 +45,7 @@
         android:layout_below="@+id/queueButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="65dp"
-        android:text="Import Class Roster"
+        android:text="@string/importRoster_button"
         android:textSize="32dp" />
 
     <EditText
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
         android:layout_marginTop="67dp"
-        android:text="Select input file (.csv)"
+        android:text="@string/selectCSV_label"
         android:textSize="24dp"
         android:layout_below="@+id/editText"
         android:layout_alignRight="@+id/setupButton"
@@ -71,7 +71,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Preview of Names in File"
+        android:text="@string/preview_label"
         android:id="@+id/textView6"
         android:textSize="30dp"
         android:layout_marginTop="79dp"
@@ -97,14 +97,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/nameList"
                 android:editable="false"
-                android:text="Names will\nappear here" />
+                android:text="Names go HEAH\nokay\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy\nayyy" />
         </LinearLayout>
     </ScrollView>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CREATE"
+        android:text="@string/create_button"
         android:id="@+id/createButton"
         android:layout_below="@+id/namePreview"
         android:layout_toLeftOf="@+id/editText"
@@ -114,7 +114,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SAVE"
+        android:text="@string/save_button"
         android:id="@+id/saveButton"
         android:layout_alignTop="@+id/createButton"
         android:layout_toRightOf="@+id/editText"
@@ -126,7 +126,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/numChecks"
-        android:text="5"
+        android:text="0"
         android:layout_below="@+id/selectCSV"
         android:layout_alignLeft="@+id/selectCSV"
         android:layout_alignStart="@+id/selectCSV" />
@@ -135,7 +135,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Number of Checkpoints"
+        android:text="@string/numberOfCheckpoints_label"
         android:id="@+id/checksNoText"
         android:layout_alignTop="@+id/numChecks"
         android:layout_alignLeft="@+id/editText2"
