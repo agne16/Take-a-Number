@@ -61,46 +61,250 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/button"
-                android:minWidth="100dp"
-                android:minHeight="100dp" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/button2"
-                android:minWidth="100dp"
-                android:minHeight="100dp" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/button3"
-                android:minWidth="100dp"
-                android:minHeight="100dp" />
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c1r1" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/button4"
-                android:minWidth="100dp"
-                android:minHeight="100dp" />
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c2r1" />
 
-            <Button
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c3r1" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c4r1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c1r2" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c2r2" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c3r2" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c4r2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c1r3" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c2r3" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c3r3" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c4r3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c1r4" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c2r4" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c3r5" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c4r5" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:id="@+id/button5"
-                android:minWidth="100dp"
-                android:minHeight="100dp" />
+                android:layout_marginLeft="150dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c5r1" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c6r1" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c7r1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c5r2" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c6r2" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c7r2" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c5r3" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c6r3" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c7r3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c5r4" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c6r4" />
+
+                    <Button
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:text="EMPTY"
+                        android:id="@+id/c7r4" />
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FRONT"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/queueButton"
+        android:layout_alignLeft="@+id/queueButton"
+        android:layout_alignStart="@+id/queueButton" />
 
 </RelativeLayout>
