@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 
+import org.java_websocket.client.WebSocketClient;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
@@ -27,6 +29,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
 
@@ -40,6 +44,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     CheckBox[][] checkList;
 
     String mergeResult = "";
+
+    String host = "http://192.168.1.144:8080";
 
     //checkbox to compare when syncing
     //used to tell if the professor wants to send an "uncheck" to the server
@@ -296,17 +302,30 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     }
                     counter++;
                 }
-                SendfeedbackJob job = new SendfeedbackJob();
-                job.execute(toSend, "" + staticChecks);
+                //SendfeedbackJob job = new SendfeedbackJob();
+                WebSocketHandler client = null;
+                try
+                {
+                    client = new WebSocketHandler(new URI(host));
+                }
+                catch (URISyntaxException e)
+                {
+                    e.printStackTrace();
+                }
+                client.connect();
+                client.waitForReady();
+                client.send(toSend);
 
                 System.out.println("INFO-checkpointSync Button :" + toSend);
 
-                while (job.getMergeResult().equals(""))
+                String response = client.getLastMessage();
+                while (response.equals(""))
                 {
-                    //wait until server delivers the goods
+                    response = client.getLastMessage();
                 }
-                System.out.println(job.getMergeResult());
-                    updateCheckpoints(job.getMergeResult());
+                System.out.println(response);
+                updateCheckpoints(response);
+                client.close();
 
             }
         });
@@ -434,109 +453,5 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
         return false;
     }
-
-
-    /**
-     * A helper class to send/receive messages from a java server
-     */
-    private class SendfeedbackJob extends AsyncTask<String, Void, String>
-    {
-        String message2 = "";
-        String receivedMessage = "";
-        PrintWriter out;
-        int numChecks = 0;
-        int rosterLength = 0;
-        String mergeResult = "";
-
-        //TODO need to move networking to a service
-        //http://stackoverflow.com/questions/7783127/keep-socket-connection-between-activities-on-android
-
-        @Override
-        protected String doInBackground(String[] params)
-        {
-            Socket socket = null;
-            DataOutputStream dataOutputStream = null;
-            DataInputStream dataInputStream = null;
-            message2 = params[0];
-            numChecks = Integer.parseInt(params[1]);
-            //rosterLength = Integer.parseInt(params[2]);
-            try
-            {
-                //socket = new Socket("10.17.3.72", 8080);
-                socket = new Socket(MainActivity.IP, MainActivity.port);
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataInputStream = new DataInputStream(socket.getInputStream());
-                out = new PrintWriter(socket.getOutputStream(), true);
-                System.out.println("INFO-message being sent to server: " + message2);
-                out.println(message2);
-                out.println("");
-            }
-            catch (UnknownHostException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            try
-            {
-                //wait for the server's response
-                while (true)
-                {
-                    String x = "";
-
-                    x = dataInputStream.readLine();
-                    receivedMessage = x;
-                    System.out.println("INFO response from server: " + x);
-
-                    //mergeee
-
-                    //TODO we're getting some wonky stuff after sync.
-                    //Where is the checkpoint update stuff
-
-                    if (x.equals(""))
-                    {
-                        //close the connection with server
-                        dataInputStream.close();
-                        dataOutputStream.close();
-                        socket.close();
-                        //tell the server you're closing the connection
-                        out.println("");
-                        //AHHHHHHHHHHHHHHHH!!! CLOSING!
-                        System.out.println("CLOSING AHHHHHHHHH");
-                        break;
-                    }
-                    else
-                    {
-                        //this means we received the checkpoint update from the server
-                        mergeResult = x;
-                    }
-
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            return mergeResult;
-        }
-
-
-        @Override
-        protected void onPostExecute(String message)
-        {
-            serverResponse = message;
-
-        }
-
-        public String getMergeResult()
-        {
-            return mergeResult;
-        }
-    }
-
-
 }
 
