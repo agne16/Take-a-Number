@@ -1,9 +1,7 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,19 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class ImportActivity extends AppCompatActivity
@@ -37,6 +29,8 @@ public class ImportActivity extends AppCompatActivity
     private String courseSection;
     private String courseName;
     EditText rosterPreview;
+
+    String host = "http://192.168.1.144:8080";
 
 
     @Override
@@ -144,7 +138,18 @@ public class ImportActivity extends AppCompatActivity
                 //TODO - is sessionID given by server?
                 intentMain.putExtra("session", sessionID);
 
-                SendfeedbackJob job = new SendfeedbackJob();
+                WebSocketHandler client = null;
+                try
+                {
+                    client = new WebSocketHandler(new URI(host));
+                }
+                catch (URISyntaxException e)
+                {
+                    e.printStackTrace();
+                }
+
+                client.connect();
+                client.waitForReady();
                 String outMessage = "checkpointInit#";
                 String checkpoints = "";
 
@@ -169,7 +174,18 @@ public class ImportActivity extends AppCompatActivity
                     outMessage += "," + names[2].trim();
                     outMessage += checkpoints;
                 }
-                job.execute(outMessage);
+                client.send(outMessage);
+
+                String message = "";
+                while (message.equals(""))
+                {
+                    message = client.getLastMessage();
+                }
+                String[] messageParams = message.split("#");
+                String sess = messageParams[1];//TODO here's the session ID. do what you want with it.
+                System.out.print("Session ID Obtained: " + sess);
+                client.close();
+
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
             }
@@ -275,85 +291,5 @@ public class ImportActivity extends AppCompatActivity
     private void setRosterPreview(String roster)
     {
         rosterPreview.setText(roster);
-    }
-
-
-    private class SendfeedbackJob extends AsyncTask<String, Void, String>
-    {
-        String message2 = "";
-        String outMessage = "";
-        String serverResponse = "";
-        PrintWriter out;
-
-        @Override
-        protected String doInBackground(String[] params)
-        {
-            Socket socket = null;
-            DataOutputStream dataOutputStream = null;
-            DataInputStream dataInputStream = null;
-            try
-            {
-                socket = new Socket(MainActivity.IP, MainActivity.port);
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataInputStream = new DataInputStream(socket.getInputStream());
-
-                outMessage = params[0];
-                out = new PrintWriter(socket.getOutputStream(), true);
-                out.println(outMessage);
-                out.println("");
-            }
-            catch (UnknownHostException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            String x = "";
-            try
-            {
-                while (true)
-                {
-                    x = "";
-
-                    x = dataInputStream.readLine();
-                    System.out.println(x);
-
-
-                    if (x.equals(""))
-                    {
-                        dataInputStream.close();
-                        dataOutputStream.close();
-                        socket.close();
-                        out.println("");
-                        System.out.println("CLOSING AHHHHHHHHH");
-                        break;
-                    }
-                    else
-                    {
-                        //means they sent us data, rather than the closing message
-                        serverResponse = x;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            return x;
-        }
-
-        @Override
-        protected void onPostExecute(String message)
-        {
-            message2 = message;
-        }
-
-        protected String getServerResponse()
-        {
-            return serverResponse;
-        }
     }
 }
