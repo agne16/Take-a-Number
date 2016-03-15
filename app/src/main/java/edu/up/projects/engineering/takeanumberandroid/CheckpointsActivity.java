@@ -15,8 +15,6 @@ import android.widget.ListView;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -257,49 +255,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view)
             {
-                //convert into format then send to server
 
-                //format is: CHECKPOINT#SESSION ID#rest
-                String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
-
-                //convert the contents into the proper format
-                //format will be:
-                //full name#checkpoint#checkpoint#checkpoint#...fullname#checkpoint#checkpoint#checkpoint...etc
-                int counter = 0;
-                for (String x : rooster)
-                {
-                    //full name#
-                    String[] names = x.split(",");
-                    String newNames = names[0].trim() + "," + names[1].trim() + "," + names[2].trim();
-
-                    toSend = toSend + "#" + newNames + ",";
-                    //TODO add check if freshly unchecked
-                    CheckBox[] oneRow = checkList[counter];
-                    for (CheckBox y : oneRow)
-                    {
-                        if (y.isChecked())
-                        {
-                            //checkpoint#
-                            toSend = toSend + "1,";
-                        }
-                        else
-                        {
-                            toSend = toSend + "0,";
-                        }
-                    }
-                    counter++;
-                }
-                client.send(toSend);
-
-                System.out.println("INFO-checkpointSync Button :" + toSend);
-
-//                String response = client.getLastMessage();
-//                while (response.equals(""))
-//                {
-//                    response = client.getLastMessage();
-//                }
-//                System.out.println(response);
-//                updateCheckpoints(response);
+                //client.send(toSend);
+                //System.out.println("INFO-checkpointSync Button :" + toSend);
 
             }
         });
@@ -351,11 +309,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (view instanceof CheckBox)
         {
-
-            CheckBox temp = (CheckBox) view;
-            temp.setChecked(true);
-            String id = "" + temp.getId();
-            checkpointSaved.put(id, true);
+            ((CheckBox) view).setChecked(true);
+            String s = checkboxToString(staticRoster.split("\\r?\\n"));
+            client.send(s);
         }
     }
 
@@ -402,10 +358,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (v instanceof CheckBox)
         {
-            CheckBox temp = (CheckBox) v;
-            temp.setChecked(false);
-            String id = "" + temp.getId();
-            checkpointSaved.put(id, false);
+            ((CheckBox) v).setChecked(false);
+            String s = checkboxToString(staticRoster.split("\\r?\\n"));
+            client.send(s);
             return true;
         }
         return false;
@@ -448,6 +403,42 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         }).start();
 
         System.out.println("onResume reached");
+    }
+
+    public String checkboxToString(String[] roster)
+    {
+        //convert into format then send to server
+
+        //format is: CHECKPOINT#SESSION ID#rest
+        String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
+
+        //convert the contents into the proper format
+        //format will be:
+        //full name#checkpoint#checkpoint#checkpoint#...fullname#checkpoint#checkpoint#checkpoint...etc
+        int counter = 0;
+        for (String x : roster)
+        {
+            //full name#
+            String[] names = x.split(",");
+            String newNames = names[0].trim() + "," + names[1].trim() + "," + names[2].trim();
+
+            toSend = toSend + "#" + newNames + ",";
+            CheckBox[] oneRow = checkList[counter];
+            for (CheckBox y : oneRow)
+            {
+                if (y.isChecked())
+                {
+                    //checkpoint#
+                    toSend = toSend + "1,";
+                }
+                else
+                {
+                    toSend = toSend + "0,";
+                }
+            }
+            counter++;
+        }
+        return toSend;
     }
 
 }
