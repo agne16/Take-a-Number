@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener
@@ -363,36 +364,27 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
      */
     public void updateCheckpoints(String updatedList)
     {
-        String[] initSplit = updatedList.split("#");
-        int counter = 1;
-
-        //checkpoints should start at 2
-        //TODO clarify whether the name is split into first, last
-        //TODO double check format
-        //checkpoint#session id#id,firstname,lastname,1,1,1,....#id,firstname,lastname,
-        for (int i = 2; i < initSplit.length; i++)
+        String[] classData = updatedList.split("#");
+        String[] checkpointData = Arrays.copyOfRange(classData, 2, classData.length);
+        int studentNumber = 0;
+        for (String data : checkpointData)
         {
-            String[] currentList = initSplit[i].split(",");
-            //3 = start of checkpoints
-            for (int j = 3; j < currentList.length; j++)
+            String checkpoints[] = data.split(",");
+            for (int i = 3; i < checkpoints.length; i++)
             {
-                int secondDigit = j - 2;
-                String id = "" + counter + secondDigit;
-                if (currentList[j].equals("1"))
+                CheckBox currBox = checkList[studentNumber][i-3];
+                if (checkpoints[i].equals("1"))
                 {
-                    checkpointSaved.put(id, true);
+                    currBox.setChecked(true);
                 }
                 else
                 {
-                    checkpointSaved.put(id, false);
+                    currBox.setChecked(false);
                 }
+                currBox.refreshDrawableState();
             }
-            counter++;
+            studentNumber++;
         }
-        Intent intentMain = new Intent(CheckpointsActivity.this,
-                CheckpointsActivity.class);
-        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        CheckpointsActivity.this.startActivity(intentMain);
     }
 
 
