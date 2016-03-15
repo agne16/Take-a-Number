@@ -1,7 +1,5 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
-import android.content.Intent;
-
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -13,11 +11,13 @@ import java.net.URI;
 public class WebSocketHandler extends WebSocketClient
 {
     String lastMessage = "";
+    boolean needUpdate = false;
 
     public WebSocketHandler(URI serverURI)
     {
         super(serverURI);
     }
+
     @Override
     public void onOpen(ServerHandshake handshakedata)
     {
@@ -80,6 +80,7 @@ public class WebSocketHandler extends WebSocketClient
 
     public void interpretMessage(String s)
     {
+        System.out.println(s);
         String[] parms = s.split("#");
         switch (parms[0].toLowerCase().trim())
         {
@@ -91,6 +92,7 @@ public class WebSocketHandler extends WebSocketClient
                 break;
             case "checkpointsync":
                 this.lastMessage = s;
+                this.needUpdate = true;
                 break;
             case "checkpointretrieve":
                 this.lastMessage = s;

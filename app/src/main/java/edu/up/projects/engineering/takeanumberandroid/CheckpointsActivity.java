@@ -15,6 +15,8 @@ import android.widget.ListView;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -25,7 +27,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     static int staticChecks = 5;
     static String serverResponse = "";
     static Hashtable<String, Boolean> checkpointSaved;
-    CheckBox[][] checkList;
+    static CheckBox[][] checkList;
 
     String mergeResult = "";
 
@@ -291,13 +293,13 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
                 System.out.println("INFO-checkpointSync Button :" + toSend);
 
-                String response = client.getLastMessage();
-                while (response.equals(""))
-                {
-                    response = client.getLastMessage();
-                }
-                System.out.println(response);
-                updateCheckpoints(response);
+//                String response = client.getLastMessage();
+//                while (response.equals(""))
+//                {
+//                    response = client.getLastMessage();
+//                }
+//                System.out.println(response);
+//                updateCheckpoints(response);
 
             }
         });
@@ -421,7 +423,32 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         super.onResume();
         this.client = NetworkService.getServerConnection();
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    while (!client.needUpdate)
+                    {
+
+                    }
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            updateCheckpoints(client.getLastMessage());
+                        }
+                    });
+                    client.needUpdate = false;
+                }
+            }
+        }).start();
+
         System.out.println("onResume reached");
     }
+
 }
 
