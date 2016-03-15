@@ -1,37 +1,20 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
-
 import android.support.v7.widget.Toolbar;
-
 import android.view.MotionEvent;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-
-import org.java_websocket.client.WebSocketClient;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.util.Hashtable;
 
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener
@@ -45,6 +28,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
     String mergeResult = "";
 
+    WebSocketHandler client = null;
     String host = "http://192.168.1.144:8080";
 
     //checkbox to compare when syncing
@@ -302,18 +286,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     }
                     counter++;
                 }
-                //SendfeedbackJob job = new SendfeedbackJob();
-                WebSocketHandler client = null;
-                try
-                {
-                    client = new WebSocketHandler(new URI(host));
-                }
-                catch (URISyntaxException e)
-                {
-                    e.printStackTrace();
-                }
-                client.connect();
-                client.waitForReady();
                 client.send(toSend);
 
                 System.out.println("INFO-checkpointSync Button :" + toSend);
@@ -325,7 +297,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 }
                 System.out.println(response);
                 updateCheckpoints(response);
-                client.close();
 
             }
         });
@@ -422,7 +393,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 CheckpointsActivity.class);
         intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         CheckpointsActivity.this.startActivity(intentMain);
-
     }
 
 
@@ -452,6 +422,14 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
 
         return false;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.client = NetworkService.getServerConnection();
+        System.out.println("onResume reached");
     }
 }
 
