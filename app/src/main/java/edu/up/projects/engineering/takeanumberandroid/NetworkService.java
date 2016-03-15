@@ -40,7 +40,7 @@ public class NetworkService extends Service {
                 System.out.println("onStartCommand invoked");
                 try
                 {
-                    serverConnection = new WebSocketHandler(new URI("http://192.168.1.144:8080"));
+                    serverConnection = new WebSocketHandler(new URI("http://10.17.141.39:8080"));
 
                 }
                 catch (URISyntaxException e)

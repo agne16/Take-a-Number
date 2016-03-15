@@ -276,7 +276,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     for (String x : rooster)
                     {
                         CheckBox[] oneRow = checkList[counter];
-                        writer.print(x + "'s checkpoints: ");
+                        writer.print(x + ",");
                         for (CheckBox y : oneRow)
                         {
                             if (y.isChecked())
