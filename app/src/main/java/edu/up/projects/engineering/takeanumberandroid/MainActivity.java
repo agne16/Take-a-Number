@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity
     WebSocketHandler client = null;
     final static String host = "http://192.168.1.144:8080";
 
+    private static final String TAG = "MainActivity";
+
     EditText sessionIDField;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         {
             client = NetworkService.getServerConnection();
         }
-        client.send("sessionRetrieve#" + sessionID);
+        client.sendSecure("sessionRetrieve#" + sessionID);
         String params = "";
         while (params.equals(""))
         {

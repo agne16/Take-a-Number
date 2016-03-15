@@ -27,6 +27,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     static Hashtable<String, Boolean> checkpointSaved;
     static CheckBox[][] checkList;
 
+    private static final String TAG = "CheckpointsActivity";
+
     String mergeResult = "";
 
     WebSocketHandler client = null;
@@ -256,7 +258,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             public void onClick(View view)
             {
 
-                //client.send(toSend);
+                //client.sendSecure(toSend);
                 //System.out.println("INFO-checkpointSync Button :" + toSend);
 
             }
@@ -311,7 +313,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         {
             ((CheckBox) view).setChecked(true);
             String s = checkboxToString(staticRoster.split("\\r?\\n"));
-            client.send(s);
+            client.sendSecure(s);
         }
     }
 
@@ -360,7 +362,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         {
             ((CheckBox) v).setChecked(false);
             String s = checkboxToString(staticRoster.split("\\r?\\n"));
-            client.send(s);
+            client.sendSecure(s);
             return true;
         }
         return false;
@@ -405,6 +407,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         System.out.println("onResume reached");
     }
 
+    /**
+     * converts the array of student checkpoint data to a condensed string
+     *
+     * @param roster array of string containing each student's name and checkpoint data
+     * @return the condensed string
+     */
     public String checkboxToString(String[] roster)
     {
         //convert into format then send to server

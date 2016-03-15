@@ -9,6 +9,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * Deploys WebSocketHandler as a service so that it run persistently throughout
+ * all activities until the program is terminated
  *
  * Based on http://javatechig.com/android/android-service-example
  */
@@ -17,13 +19,10 @@ public class NetworkService extends Service {
     private static final String TAG = "Network Service";
     private static WebSocketHandler serverConnection = null;
 
-    private boolean isRunning  = false;
-
     @Override
     public void onCreate() {
         Log.i(TAG, "Service onCreate");
 
-        isRunning = true;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class NetworkService extends Service {
                 System.out.println("onStartCommand invoked");
                 try
                 {
-                    serverConnection = new WebSocketHandler(new URI("http://10.17.141.39:8080"));
+                    serverConnection = new WebSocketHandler(new URI("http://192.168.1.144:8080"));
 
                 }
                 catch (URISyntaxException e)
@@ -50,7 +49,7 @@ public class NetworkService extends Service {
                 serverConnection.connect();
                 serverConnection.waitForReady();
 
-                serverConnection.send("identify#tablet");
+                serverConnection.sendSecure("identify#tablet");
             }
         }).start();
 
@@ -68,8 +67,6 @@ public class NetworkService extends Service {
 
     @Override
     public void onDestroy() {
-
-        isRunning = false;
 
         Log.i(TAG, "Service onDestroy");
     }

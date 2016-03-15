@@ -31,6 +31,8 @@ public class ImportActivity extends AppCompatActivity
     WebSocketHandler client = null;
     String host = "http://192.168.1.144:8080";
 
+    private static final String TAG = "ImportActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -161,7 +163,7 @@ public class ImportActivity extends AppCompatActivity
                     outMessage += "," + names[2].trim();
                     outMessage += checkpoints;
                 }
-                client.send(outMessage);
+                client.sendSecure(outMessage);
 
                 String message = "";
                 while (message.equals(""))
