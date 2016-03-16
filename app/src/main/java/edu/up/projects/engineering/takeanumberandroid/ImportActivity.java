@@ -135,7 +135,6 @@ public class ImportActivity extends AppCompatActivity
 
                 final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
                 intentMain.putExtra("numChecks", numberOfCheckpoints);
-                //TODO - is sessionID given by server?
                 intentMain.putExtra("session", sessionID);
 
                 WebSocketHandler client = null;

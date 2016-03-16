@@ -56,6 +56,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        try{
+        QueueActivity2.sessionID = getIntent().getExtras().getString("session");
+        }
+        catch(Exception sessionIDNotSet){
+        }
         if (checkpointSaved == null)
         {
             checkpointSaved = new Hashtable<String, Boolean>();
