@@ -16,8 +16,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 
 public class ImportActivity extends AppCompatActivity
@@ -30,7 +28,10 @@ public class ImportActivity extends AppCompatActivity
     private String courseName;
     EditText rosterPreview;
 
+    WebSocketHandler client = null;
     String host = "http://192.168.1.144:8080";
+
+    private static final String TAG = "ImportActivity";
 
 
     @Override
@@ -137,18 +138,6 @@ public class ImportActivity extends AppCompatActivity
                 intentMain.putExtra("numChecks", numberOfCheckpoints);
                 intentMain.putExtra("session", sessionID);
 
-                WebSocketHandler client = null;
-                try
-                {
-                    client = new WebSocketHandler(new URI(host));
-                }
-                catch (URISyntaxException e)
-                {
-                    e.printStackTrace();
-                }
-
-                client.connect();
-                client.waitForReady();
                 String outMessage = "checkpointInit#";
                 String checkpoints = "";
 
@@ -173,7 +162,7 @@ public class ImportActivity extends AppCompatActivity
                     outMessage += "," + names[2].trim();
                     outMessage += checkpoints;
                 }
-                client.send(outMessage);
+                client.sendSecure(outMessage);
 
                 String message = "";
                 while (message.equals(""))
@@ -183,7 +172,6 @@ public class ImportActivity extends AppCompatActivity
                 String[] messageParams = message.split("#");
                 String sess = messageParams[1];//TODO here's the session ID. do what you want with it.
                 System.out.print("Session ID Obtained: " + sess);
-                client.close();
 
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
@@ -290,5 +278,13 @@ public class ImportActivity extends AppCompatActivity
     private void setRosterPreview(String roster)
     {
         rosterPreview.setText(roster);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.client = NetworkService.getServerConnection();
+        System.out.println("onResume reached");
     }
 }

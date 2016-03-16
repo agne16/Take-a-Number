@@ -1,37 +1,21 @@
 package edu.up.projects.engineering.takeanumberandroid;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
-
 import android.support.v7.widget.Toolbar;
-
 import android.view.MotionEvent;
 import android.view.View;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-
-import org.java_websocket.client.WebSocketClient;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Hashtable;
 
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener
@@ -41,10 +25,13 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     static int staticChecks = 5;
     static String serverResponse = "";
     static Hashtable<String, Boolean> checkpointSaved;
-    CheckBox[][] checkList;
+    static CheckBox[][] checkList;
+
+    private static final String TAG = "CheckpointsActivity";
 
     String mergeResult = "";
 
+    WebSocketHandler client = null;
     String host = "http://192.168.1.144:8080";
 
     //checkbox to compare when syncing
@@ -276,62 +263,9 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             @Override
             public void onClick(View view)
             {
-                //convert into format then send to server
 
-                //format is: CHECKPOINT#SESSION ID#rest
-                String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
-
-                //convert the contents into the proper format
-                //format will be:
-                //full name#checkpoint#checkpoint#checkpoint#...fullname#checkpoint#checkpoint#checkpoint...etc
-                int counter = 0;
-                for (String x : rooster)
-                {
-                    //full name#
-                    String[] names = x.split(",");
-                    String newNames = names[0].trim() + "," + names[1].trim() + "," + names[2].trim();
-
-                    toSend = toSend + "#" + newNames + ",";
-                    //TODO add check if freshly unchecked
-                    CheckBox[] oneRow = checkList[counter];
-                    for (CheckBox y : oneRow)
-                    {
-                        if (y.isChecked())
-                        {
-                            //checkpoint#
-                            toSend = toSend + "1,";
-                        }
-                        else
-                        {
-                            toSend = toSend + "0,";
-                        }
-                    }
-                    counter++;
-                }
-                //SendfeedbackJob job = new SendfeedbackJob();
-                WebSocketHandler client = null;
-                try
-                {
-                    client = new WebSocketHandler(new URI(host));
-                }
-                catch (URISyntaxException e)
-                {
-                    e.printStackTrace();
-                }
-                client.connect();
-                client.waitForReady();
-                client.send(toSend);
-
-                System.out.println("INFO-checkpointSync Button :" + toSend);
-
-                String response = client.getLastMessage();
-                while (response.equals(""))
-                {
-                    response = client.getLastMessage();
-                }
-                System.out.println(response);
-                updateCheckpoints(response);
-                client.close();
+                //client.sendSecure(toSend);
+                //System.out.println("INFO-checkpointSync Button :" + toSend);
 
             }
         });
@@ -350,7 +284,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                     for (String x : rooster)
                     {
                         CheckBox[] oneRow = checkList[counter];
-                        writer.print(x + "'s checkpoints: ");
+                        writer.print(x + ",");
                         for (CheckBox y : oneRow)
                         {
                             if (y.isChecked())
@@ -383,11 +317,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (view instanceof CheckBox)
         {
-
-            CheckBox temp = (CheckBox) view;
+            CheckBox temp = ((CheckBox) view);
             temp.setChecked(true);
+            String s = checkboxToString(staticRoster.split("\\r?\\n"));
             String id = "" + temp.getId();
             checkpointSaved.put(id, true);
+            client.sendSecure(s);
         }
     }
 
@@ -398,37 +333,35 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
      */
     public void updateCheckpoints(String updatedList)
     {
-        String[] initSplit = updatedList.split("#");
-        int counter = 1;
-
-        //checkpoints should start at 2
-        //TODO clarify whether the name is split into first, last
-        //TODO double check format
-        //checkpoint#session id#id,firstname,lastname,1,1,1,....#id,firstname,lastname,
-        for (int i = 2; i < initSplit.length; i++)
+        if(updatedList.equals(""))
         {
-            String[] currentList = initSplit[i].split(",");
-            //3 = start of checkpoints
-            for (int j = 3; j < currentList.length; j++)
+            return;
+        }
+        String[] classData = updatedList.split("#");
+        String[] checkpointData = Arrays.copyOfRange(classData, 2, classData.length);
+        int studentNumber = 0;
+        for (String data : checkpointData)
+        {
+            String checkpoints[] = data.split(",");
+            for (int i = 3; i < checkpoints.length; i++)
             {
-                int secondDigit = j - 2;
-                String id = "" + counter + secondDigit;
-                if (currentList[j].equals("1"))
+                CheckBox currBox = checkList[studentNumber][i-3];
+                if (checkpoints[i].equals("1"))
                 {
+                    currBox.setChecked(true);
+                    String id = "" + currBox.getId();
                     checkpointSaved.put(id, true);
                 }
                 else
                 {
+                    currBox.setChecked(false);
+                    String id = "" + currBox.getId();
                     checkpointSaved.put(id, false);
                 }
+                currBox.refreshDrawableState();
             }
-            counter++;
+            studentNumber++;
         }
-        Intent intentMain = new Intent(CheckpointsActivity.this,
-                CheckpointsActivity.class);
-        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        CheckpointsActivity.this.startActivity(intentMain);
-
     }
 
 
@@ -444,10 +377,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (v instanceof CheckBox)
         {
-            CheckBox temp = (CheckBox) v;
+            CheckBox temp = ((CheckBox) v);
             temp.setChecked(false);
+            String s = checkboxToString(staticRoster.split("\\r?\\n"));
             String id = "" + temp.getId();
-            checkpointSaved.put(id, false);
+            checkpointSaved.put(id, true);
+            client.sendSecure(s);
             return true;
         }
         return false;
@@ -459,5 +394,80 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
         return false;
     }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.client = NetworkService.getServerConnection();
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (true)
+                {
+                    while (!client.needUpdate)
+                    {
+
+                    }
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            updateCheckpoints(client.getLastMessage());
+                        }
+                    });
+                    client.needUpdate = false;
+                }
+            }
+        }).start();
+
+        System.out.println("onResume reached");
+    }
+
+    /**
+     * converts the array of student checkpoint data to a condensed string
+     *
+     * @param roster array of string containing each student's name and checkpoint data
+     * @return the condensed string
+     */
+    public String checkboxToString(String[] roster)
+    {
+        //convert into format then send to server
+
+        //format is: CHECKPOINT#SESSION ID#rest
+        String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
+
+        //convert the contents into the proper format
+        //format will be:
+        //full name#checkpoint#checkpoint#checkpoint#...fullname#checkpoint#checkpoint#checkpoint...etc
+        int counter = 0;
+        for (String x : roster)
+        {
+            //full name#
+            String[] names = x.split(",");
+            String newNames = names[0].trim() + "," + names[1].trim() + "," + names[2].trim();
+
+            toSend = toSend + "#" + newNames + ",";
+            CheckBox[] oneRow = checkList[counter];
+            for (CheckBox y : oneRow)
+            {
+                if (y.isChecked())
+                {
+                    //checkpoint#
+                    toSend = toSend + "1,";
+                }
+                else
+                {
+                    toSend = toSend + "0,";
+                }
+            }
+            counter++;
+        }
+        return toSend;
+    }
+
 }
 

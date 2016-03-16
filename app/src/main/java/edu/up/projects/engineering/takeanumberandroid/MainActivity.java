@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity
@@ -24,7 +22,10 @@ public class MainActivity extends AppCompatActivity
     final int lastNameIndex = 2;
     final int firstCheckpointIndex = 3;
 
+    WebSocketHandler client = null;
     final static String host = "http://192.168.1.144:8080";
+
+    private static final String TAG = "MainActivity";
 
     EditText sessionIDField;
     @Override
@@ -140,6 +141,9 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        Intent intent = new Intent(this, NetworkService.class);
+        startService(intent);
     }
 
     @Override
@@ -178,18 +182,11 @@ public class MainActivity extends AppCompatActivity
                 CheckpointsActivity.class);
         intentMain.putExtra("session", sessionID);
 
-        WebSocketHandler client = null;
-        try
+        if (client == null)
         {
-            client = new WebSocketHandler(new URI(host));
+            client = NetworkService.getServerConnection();
         }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-        client.connect();
-        client.waitForReady();
-        client.send("sessionRetrieve#" + sessionID);
+        client.sendSecure("sessionRetrieve#" + sessionID);
         String params = "";
         while (params.equals(""))
         {
@@ -257,5 +254,20 @@ public class MainActivity extends AppCompatActivity
         intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         MainActivity.this.startActivity(intentMain);
         Log.i("Content ", " Main layout ");
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.client = NetworkService.getServerConnection();
+        System.out.println("onResume reached");
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        System.out.println("onDestroy() reached");
     }
 }
