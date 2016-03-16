@@ -311,8 +311,11 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (view instanceof CheckBox)
         {
-            ((CheckBox) view).setChecked(true);
+            CheckBox temp = ((CheckBox) view);
+            temp.setChecked(true);
             String s = checkboxToString(staticRoster.split("\\r?\\n"));
+            String id = "" + temp.getId();
+            checkpointSaved.put(id, true);
             client.sendSecure(s);
         }
     }
@@ -324,6 +327,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
      */
     public void updateCheckpoints(String updatedList)
     {
+        if(updatedList.equals(""))
+        {
+            return;
+        }
         String[] classData = updatedList.split("#");
         String[] checkpointData = Arrays.copyOfRange(classData, 2, classData.length);
         int studentNumber = 0;
@@ -336,10 +343,14 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 if (checkpoints[i].equals("1"))
                 {
                     currBox.setChecked(true);
+                    String id = "" + currBox.getId();
+                    checkpointSaved.put(id, true);
                 }
                 else
                 {
                     currBox.setChecked(false);
+                    String id = "" + currBox.getId();
+                    checkpointSaved.put(id, false);
                 }
                 currBox.refreshDrawableState();
             }
@@ -360,8 +371,11 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     {
         if (v instanceof CheckBox)
         {
-            ((CheckBox) v).setChecked(false);
+            CheckBox temp = ((CheckBox) v);
+            temp.setChecked(false);
             String s = checkboxToString(staticRoster.split("\\r?\\n"));
+            String id = "" + temp.getId();
+            checkpointSaved.put(id, true);
             client.sendSecure(s);
             return true;
         }
