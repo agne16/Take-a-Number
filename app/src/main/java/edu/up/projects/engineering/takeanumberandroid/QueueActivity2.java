@@ -16,23 +16,28 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
 
-public class QueueActivity2 extends AppCompatActivity implements View.OnClickListener{
+public class QueueActivity2 extends AppCompatActivity implements View.OnClickListener
+{
     public static int[] layout;
     public static String sessionID;
     public static Hashtable<String, Button> positions;
     public static Button[] posits;
+    WebSocketHandler client = null;
     String host = "http://192.168.1.144:8080";
-    boolean testing = true;
-int[] layoutParams;
+    boolean testing = false;
+    int[] layoutParams;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        if(layout == null){
+        if (layout == null)
+        {
             //set a default layout that's all empty
             //as a reminder, 0 = left rows, 1 = right rows, 2 = left columns, 3 = right columns
             layout = new int[4];
@@ -42,15 +47,17 @@ int[] layoutParams;
             layout[3] = 3;
         }
 
-        if(sessionID==null){
-            try{
+        if (sessionID == null)
+        {
+            try
+            {
                 sessionID = getIntent().getExtras().getString("session");
             }
-            catch(Exception sessionIDNotSet){
+            catch (Exception sessionIDNotSet)
+            {
                 sessionID = "NO SESSION ID FOUND, PLEASE TRY AGAIN NEXT YEAR";
             }
         }
-
 
 
         LinearLayout leftRows = (LinearLayout) findViewById(R.id.leftRows);
@@ -62,15 +69,16 @@ int[] layoutParams;
         int totalRightRows = layout[2];
         int totalRightColumns = layout[3];
 
-        if(positions == null){
+        if (positions == null)
+        {
             positions = new Hashtable<String, Button>();
         }
         //TODO - need to get names of students from the server
-        for(int currentRow = 0; currentRow<totalLeftRows;currentRow++)
+        for (int currentRow = 0; currentRow < totalLeftRows; currentRow++)
         {
             LinearLayout oneRow = new LinearLayout(this);
             oneRow.setOrientation(LinearLayout.HORIZONTAL);
-            for(int currentColumn = 0; currentColumn<totalLeftColumns;currentColumn++)
+            for (int currentColumn = 0; currentColumn < totalLeftColumns; currentColumn++)
             {
                 int colId = currentColumn + 1;
                 int rowId = currentRow + 1;
@@ -81,15 +89,17 @@ int[] layoutParams;
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(130);
                 onePosition.setHeight(130);
-                if(positions.get(id)==null){
+                if (positions.get(id) == null)
+                {
                     onePosition.setText("EMPTY");
-                    positions.put(id,onePosition);
+                    positions.put(id, onePosition);
                 }
-                else{
+                else
+                {
                     String name = positions.get(id).getText().toString();
                     onePosition.setText(name);
                     //not sure if need to overwrite
-                    positions.put(id,onePosition);
+                    positions.put(id, onePosition);
                 }
                 oneRow.addView(onePosition);
             }
@@ -97,11 +107,11 @@ int[] layoutParams;
 
         }
 
-        for(int currentRow = 0; currentRow<totalRightRows;currentRow++)
+        for (int currentRow = 0; currentRow < totalRightRows; currentRow++)
         {
             LinearLayout oneRow = new LinearLayout(this);
             oneRow.setOrientation(LinearLayout.HORIZONTAL);
-            for(int currentColumn = 0; currentColumn<totalRightColumns;currentColumn++)
+            for (int currentColumn = 0; currentColumn < totalRightColumns; currentColumn++)
             {
                 int colIdOffset = currentColumn + totalLeftColumns;
                 int rowId = currentRow;
@@ -113,42 +123,50 @@ int[] layoutParams;
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(130);
                 onePosition.setHeight(130);
-                if(positions.get(id)==null){
+                if (positions.get(id) == null)
+                {
                     onePosition.setText("EMPTY");
-                    positions.put(id,onePosition);
+                    positions.put(id, onePosition);
                 }
-                else{
+                else
+                {
                     String name = positions.get(id).getText().toString();
                     onePosition.setText(name);
                     //not sure if need to overwrite
-                    positions.put(id,onePosition);
+                    positions.put(id, onePosition);
                 }
                 oneRow.addView(onePosition);
             }
             rightRows.addView(oneRow);
 
         }
-        updateQueue("POSITIONS#first,last,c1r1,0#first,last,c1r2,1");
 
-//        if(positions==null && !testing){
-//            positions = new Hashtable<String,Button>();
-//            //need to get student positions from server
-//            String serverResponse = networkRequest("pleasegimmestudentpositionsfor#"+sessionID);
-//            updateQueue(serverResponse);
-//        }
-//        else if(positions==null){
-//            //format is messageType#firstname,lastname,position,queueNum#...
-//            updateQueue("POSITIONS#first,last,c1r1,0#first,last,c132,1");
-//        }
+        if(positions==null && !testing){
+            positions = new Hashtable<String,Button>();
+            //need to get student positions from server
+            String serverResponse = networkRequest("getPositions#"+sessionID);
+            updateQueue(serverResponse);
+        }
+        else if(positions==null){
+            //format is messageType#firstname,lastname,position,queueNum#...
+            updateQueue("POSITIONS#first,last,c1r1,0#first,last,c132,1");
+        }
+        else
+        {
+            String serverResponse = networkRequest("getPositions#"+sessionID);
+            updateQueue(serverResponse);
+        }
 
         Button setupB = (Button) findViewById(R.id.setupButton);
         Button queueB = (Button) findViewById(R.id.queueButton);
         Button checkpointsB = (Button) findViewById(R.id.checkpointsButton);
 
 
-        setupB.setOnClickListener(new View.OnClickListener() {
+        setupB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(QueueActivity2.this,
                         MainActivity.class);
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -157,15 +175,19 @@ int[] layoutParams;
             }
         });
 
-        queueB.setOnClickListener(new View.OnClickListener() {
+        queueB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
             }
         });
 
-        checkpointsB.setOnClickListener(new View.OnClickListener() {
+        checkpointsB.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Intent intentMain = new Intent(QueueActivity2.this,
                         CheckpointsActivity.class);
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -175,12 +197,14 @@ int[] layoutParams;
         });
 
         Button queueSync = (Button) findViewById(R.id.queueSync);
-        queueSync.setOnClickListener(new View.OnClickListener(){
+        queueSync.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 String toSend = "NEED QUEUE POSITIONS PLIS";
                 String serverResponse = "";
-                if(!testing)
+                if (!testing)
                 {
                     serverResponse = networkRequest(toSend);
                 }
@@ -195,8 +219,6 @@ int[] layoutParams;
         });
 
 
-
-
     }
 
 
@@ -206,12 +228,15 @@ int[] layoutParams;
      * used to:
      * get positions of students in the room
      * get queue positions of students in the room
+     *
      * @param response - the response from the server
      */
-    public void updateQueue(String response){
+    public void updateQueue(String response)
+    {
 
         String[] initSplit = response.split("#");
-        for(int currentName = 1;currentName<initSplit.length;currentName++){
+        for (int currentName = 1; currentName < initSplit.length; currentName++)
+        {
             //first,last,c1r1,0
             String[] oneStudent = initSplit[currentName].split(",");
             String id = oneStudent[2];
@@ -219,7 +244,8 @@ int[] layoutParams;
             System.out.println(id);
             //POSITIONS#first,last,c1r1,0#first,last,c132,1
             positions.get(id).setText(oneStudent[0] + " " + oneStudent[1]);
-            switch(queuePosition){
+            switch (queuePosition)
+            {
                 case 0:
                     //means not in queue
                     positions.get(id).setBackgroundColor(Color.GRAY);
@@ -241,7 +267,8 @@ int[] layoutParams;
 
     }
 
-    public void removeFromQueue(Button butt){
+    public void removeFromQueue(Button butt)
+    {
         //TODO check if that's the right format
         Button name = positions.get(butt.getId());
         String toSend = "removeFromQueue#" + name.getText();
@@ -249,19 +276,13 @@ int[] layoutParams;
 
     }
 
-    public String networkRequest(String message){
+    public String networkRequest(String message)
+    {
         String toSend = message;
-        WebSocketHandler client = null;
-        try
+        if (this.client == null)
         {
-            client = new WebSocketHandler(new URI(host));
+            this.client = NetworkService.getServerConnection();
         }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-        client.connect();
-        client.waitForReady();
         client.send(toSend);
 
         //System.out.println("INFO-checkpointSync Button :" + toSend);
@@ -279,7 +300,16 @@ int[] layoutParams;
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
         //NOTE - SHOULD ONLY BE USED FOR QUEUE BUTTONS
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        this.client = NetworkService.getServerConnection();
+        System.out.println("onResume reached");
     }
 }

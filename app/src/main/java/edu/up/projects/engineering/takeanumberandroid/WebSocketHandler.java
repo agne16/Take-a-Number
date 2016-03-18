@@ -118,6 +118,9 @@ public class WebSocketHandler extends WebSocketClient
             case "checkpointretrieve":
                 this.lastMessage = s;
                 break;
+            case "positions":
+                this.lastMessage = s;
+                break;
             default:
                 break;
         }
