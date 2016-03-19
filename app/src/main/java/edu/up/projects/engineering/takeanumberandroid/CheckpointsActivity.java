@@ -193,7 +193,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 check.setOnLongClickListener(this);
                 LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 //left, top, right, bottom margins
-                par.setMargins(5, 0, 5, botMar);
+                par.setMargins(5, 0, 5, 34);
 
                 check.setLayoutParams(par);
                 //give each checkbox a unique id so we can access it when it's time to output
