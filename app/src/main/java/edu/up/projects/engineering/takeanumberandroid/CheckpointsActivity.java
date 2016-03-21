@@ -43,7 +43,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        int dpValue = 4; // margin in dips
+        float d = getResources().getDisplayMetrics().density;
+        System.out.println(d);
+        int margin = (int)(dpValue * d); // margin in pixels
         try{
         QueueActivity2.sessionID = getIntent().getExtras().getString("session");
         }
@@ -134,25 +137,25 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             index++;
         }
         int botMar = 17;
-        boolean isSmall = true;
-            CheckBox che = (CheckBox) findViewById(R.id.smallSize);
-        if(che == null){
-            isSmall = false;
-        }
-
-        if(!isSmall){
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                    this, android.R.layout.simple_list_item_1, studentNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-            theRoster.setAdapter(adapter);
-        }
-        else{
+//        boolean isSmall = true;
+//            CheckBox che = (CheckBox) findViewById(R.id.smallSize);
+//        if(che == null){
+//            isSmall = false;
+//        }
+//
+//        if(!isSmall){
+//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+//                    this, android.R.layout.simple_list_item_1, studentNames);
+//            adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+//            theRoster.setAdapter(adapter);
+//        }
+//        else{
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                     this, R.layout.mylist, studentNames);
-            adapter.setDropDownViewResource(R.layout.mylist);
+            adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
             theRoster.setAdapter(adapter);
             botMar = 8;
-        }
+//        }
 
 
         //initialize it to a completely empty checkbox at the beginning
@@ -193,7 +196,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 check.setOnLongClickListener(this);
                 LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 //left, top, right, bottom margins
-                par.setMargins(5, 0, 5, 34);
+                par.setMargins(5, 0, 5, margin);
 
                 check.setLayoutParams(par);
                 //give each checkbox a unique id so we can access it when it's time to output
@@ -399,32 +402,29 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     public void onResume()
     {
         super.onResume();
-        this.client = NetworkService.getServerConnection();
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                while (true)
-                {
-                    while (!client.needUpdate)
-                    {
+        if(!MainActivity.isTesting) {
 
-                    }
-                    runOnUiThread(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            updateCheckpoints(client.getLastMessage());
+            this.client = NetworkService.getServerConnection();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        while (!client.needUpdate) {
+
                         }
-                    });
-                    client.needUpdate = false;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateCheckpoints(client.getLastMessage());
+                            }
+                        });
+                        client.needUpdate = false;
+                    }
                 }
-            }
-        }).start();
+            }).start();
 
-        System.out.println("onResume reached");
+            System.out.println("onResume reached");
+        }
     }
 
     /**

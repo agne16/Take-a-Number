@@ -28,34 +28,33 @@ public class NetworkService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i(TAG, "Service onStartCommand");
+        if(!MainActivity.isTesting) {
 
-        //Creating new thread for my service
-        //Always write your long running tasks in a separate thread, to avoid ANR
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                System.out.println("onStartCommand invoked");
-                try
-                {
-                    serverConnection = new WebSocketHandler(new URI("http://192.168.1.144:8080"));
 
+            Log.i(TAG, "Service onStartCommand");
+
+            //Creating new thread for my service
+            //Always write your long running tasks in a separate thread, to avoid ANR
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("onStartCommand invoked");
+                    try {
+                        serverConnection = new WebSocketHandler(new URI("http://192.168.1.144:8080"));
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                    serverConnection.connect();
+                    serverConnection.waitForReady();
+
+                    serverConnection.sendSecure("identify#tablet");
                 }
-                catch (URISyntaxException e)
-                {
-                    e.printStackTrace();
-                }
-                serverConnection.connect();
-                serverConnection.waitForReady();
+            }).start();
 
-                serverConnection.sendSecure("identify#tablet");
-            }
-        }).start();
-
-        stopSelf();
-
-        return Service.START_STICKY;
+            stopSelf();
+        }
+            return Service.START_STICKY;
     }
 
 

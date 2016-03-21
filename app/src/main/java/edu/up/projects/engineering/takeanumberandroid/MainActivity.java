@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity
     final int lastNameIndex = 2;
     final int firstCheckpointIndex = 3;
 
+    public static final boolean isTesting = false;
+
     WebSocketHandler client = null;
     final static String host = "http://192.168.1.144:8080";
 
@@ -260,7 +262,10 @@ public class MainActivity extends AppCompatActivity
     public void onResume()
     {
         super.onResume();
-        this.client = NetworkService.getServerConnection();
+        if(!isTesting){
+            this.client = NetworkService.getServerConnection();
+        }
+
         System.out.println("onResume reached");
     }
 
