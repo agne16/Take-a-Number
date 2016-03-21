@@ -26,6 +26,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     static String serverResponse = "";
     static Hashtable<String, Boolean> checkpointSaved;
     static CheckBox[][] checkList;
+   
 
     private static final String TAG = "CheckpointsActivity";
 
