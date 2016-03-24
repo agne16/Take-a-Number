@@ -28,8 +28,8 @@ public class ImportActivity extends AppCompatActivity
     private String courseName;
     EditText rosterPreview;
 
-    WebSocketHandler client = null;
-    String host = "http://192.168.1.144:8080";
+    WebSocket client = null;
+//    String host = "http://192.168.1.144:8080";
 
     private static final String TAG = "ImportActivity";
 
@@ -136,7 +136,6 @@ public class ImportActivity extends AppCompatActivity
 
                 final int numberOfCheckpoints = Integer.parseInt(numChecks.getText().toString());
                 intentMain.putExtra("numChecks", numberOfCheckpoints);
-                intentMain.putExtra("session", sessionID);
 
                 String outMessage = "checkpointInit#";
                 String checkpoints = "";
@@ -149,7 +148,7 @@ public class ImportActivity extends AppCompatActivity
 
                 String labNumber = "01";//TODO lab number hardcoded for now
                 String rosterString = content;
-                System.out.println("AYYY");
+                //System.out.println("AYYY");
 
                 outMessage += courseId + "," + courseSection + "," + labNumber + "," + courseName + "," + numberOfCheckpoints;
                 String[] studentNames = rosterString.split("\\n");
@@ -172,6 +171,10 @@ public class ImportActivity extends AppCompatActivity
                 String[] messageParams = message.split("#");
                 String sess = messageParams[1];//TODO here's the session ID. do what you want with it.
                 System.out.print("Session ID Obtained: " + sess);
+                sessionID = sess;
+                intentMain.putExtra("session", sessionID);
+
+                client.sendSecure("positionInit#" + sessionID + "#4,4,4,3");
 
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
@@ -284,7 +287,8 @@ public class ImportActivity extends AppCompatActivity
     public void onResume()
     {
         super.onResume();
-        this.client = NetworkService.getServerConnection();
+        this.client = WebSocketHandler.getWebSocket();
+
         System.out.println("onResume reached");
     }
 }

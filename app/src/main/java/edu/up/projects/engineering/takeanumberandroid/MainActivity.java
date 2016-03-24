@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 public class MainActivity extends AppCompatActivity
@@ -24,8 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     public static final boolean isTesting = false;
 
-    WebSocketHandler client = null;
-    final static String host = "http://192.168.1.144:8080";
+    WebSocket client = null;
 
     private static final String TAG = "MainActivity";
 
@@ -144,8 +145,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        Intent intent = new Intent(this, NetworkService.class);
-        startService(intent);
+//        Intent intent = new Intent(this, NetworkService.class);
+//        startService(intent);
     }
 
     @Override
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 
         if (client == null)
         {
-            client = NetworkService.getServerConnection();
+            client = WebSocketHandler.getWebSocket();
         }
         client.sendSecure("sessionRetrieve#" + sessionID);
         String params = "";
@@ -262,9 +263,19 @@ public class MainActivity extends AppCompatActivity
     public void onResume()
     {
         super.onResume();
-        if(!isTesting){
-            this.client = NetworkService.getServerConnection();
+//        if(!isTesting){
+//            this.client = NetworkService.getServerConnection();
+//        }
+        try {
+            client = new WebSocket(new URI("http://10.17.141.39:8080"));
+            //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
+        client.connect();
+        client.waitForReady();
+        client.send("identify#tablet");
+        WebSocketHandler.setWebSocket(client);
 
         System.out.println("onResume reached");
     }

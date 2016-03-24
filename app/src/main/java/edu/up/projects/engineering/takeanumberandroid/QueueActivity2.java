@@ -3,8 +3,6 @@ package edu.up.projects.engineering.takeanumberandroid;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,8 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Hashtable;
 
 public class QueueActivity2 extends AppCompatActivity implements View.OnClickListener
@@ -22,7 +18,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public static String sessionID;
     public static Hashtable<String, Button> positions;
     public static Button[] posits;
-    WebSocketHandler client = null;
+    WebSocket client = null;
     String host = "http://192.168.1.144:8080";
     boolean testing = false;
     int[] layoutParams;
@@ -233,6 +229,9 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
      */
     public void updateQueue(String response)
     {
+        if (response.equals("positions")){
+            return;
+        }
 
         String[] initSplit = response.split("#");
         for (int currentName = 1; currentName < initSplit.length; currentName++)
@@ -281,7 +280,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         String toSend = message;
         if (this.client == null)
         {
-            this.client = NetworkService.getServerConnection();
+            this.client = WebSocketHandler.getWebSocket();
         }
         client.send(toSend);
 
@@ -309,7 +308,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public void onResume()
     {
         super.onResume();
-        this.client = NetworkService.getServerConnection();
+        this.client = WebSocketHandler.getWebSocket();
         System.out.println("onResume reached");
     }
 }

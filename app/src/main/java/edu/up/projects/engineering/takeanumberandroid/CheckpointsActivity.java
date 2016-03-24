@@ -32,8 +32,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
     String mergeResult = "";
 
-    WebSocketHandler client = null;
-    String host = "http://192.168.1.144:8080";
+    WebSocket client = null;
+//    String host = "http://192.168.1.144:8080";
 
     //checkbox to compare when syncing
     //used to tell if the professor wants to send an "uncheck" to the server
@@ -405,7 +405,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         super.onResume();
         if(!MainActivity.isTesting) {
 
-            this.client = NetworkService.getServerConnection();
+            this.client = WebSocketHandler.getWebSocket();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -424,8 +424,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 }
             }).start();
 
-            System.out.println("onResume reached");
         }
+        System.out.println("onResume reached");
     }
 
     /**
