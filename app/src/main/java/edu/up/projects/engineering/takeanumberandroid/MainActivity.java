@@ -266,18 +266,22 @@ public class MainActivity extends AppCompatActivity
 //        if(!isTesting){
 //            this.client = NetworkService.getServerConnection();
 //        }
-        try {
-            client = new WebSocket(new URI("http://10.17.141.39:8080"));
-            //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        client.connect();
-        client.waitForReady();
-        client.send("identify#tablet");
-        WebSocketHandler.setWebSocket(client);
+        if(!isTesting) {
 
-        System.out.println("onResume reached");
+
+            try {
+                client = new WebSocket(new URI("http://10.5.129.13:8080"));
+                //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            client.connect();
+            client.waitForReady();
+            client.send("identify#tablet");
+            WebSocketHandler.setWebSocket(client);
+
+            System.out.println("onResume reached");
+        }
     }
 
     @Override

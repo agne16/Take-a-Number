@@ -198,7 +198,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onClick(View v)
             {
-                String toSend = "NEED QUEUE POSITIONS PLIS";
+                String toSend = "getposition#"+sessionID;
                 String serverResponse = "";
                 if (!testing)
                 {
