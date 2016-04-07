@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity
             {
                 //preset for 206/249
                 int[] layoutParams = new int[4];
-                layoutParams[0] = 5;
-                layoutParams[1] = 5;
+                layoutParams[0] = 6;
+                layoutParams[1] = 6;
                 layoutParams[2] = 4;
                 layoutParams[3] = 3;
                 moveToImport(layoutParams);

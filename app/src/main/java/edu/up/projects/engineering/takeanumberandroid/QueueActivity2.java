@@ -10,9 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
-public class QueueActivity2 extends AppCompatActivity implements View.OnClickListener
+/**
+ * QUICK REF for messages tablet sends/expects to receive:
+ * message sent for requesting positions: getqueue#sessionId
+ * Message expected from server: positions#first,last,id,position,queuenum#...
+ * message sent for removing a student from queue: leavequeue#sessionid#id
+ */
+public class QueueActivity2 extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener
 {
     public static int[] layout;
     public static String sessionID;
@@ -20,7 +27,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public static Button[] posits;
     WebSocket client = null;
     String host = "http://192.168.1.144:8080";
-    boolean testing = false;
+    boolean testing = MainActivity.isTesting;
     int[] layoutParams;
 
     @Override
@@ -37,8 +44,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             //set a default layout that's all empty
             //as a reminder, 0 = left rows, 1 = right rows, 2 = left columns, 3 = right columns
             layout = new int[4];
-            layout[0] = 4;
-            layout[1] = 4;
+            layout[0] = 5;
+            layout[1] = 5;
             layout[2] = 4;
             layout[3] = 3;
         }
@@ -70,12 +77,14 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             positions = new Hashtable<String, Button>();
         }
         //TODO - need to get names of students from the server
+        //two loops to set up the layout of the classroom
         for (int currentRow = 0; currentRow < totalLeftRows; currentRow++)
         {
             LinearLayout oneRow = new LinearLayout(this);
             oneRow.setOrientation(LinearLayout.HORIZONTAL);
             for (int currentColumn = 0; currentColumn < totalLeftColumns; currentColumn++)
             {
+                //these two are if we decide to start at 1 instead of 0 for col/row indices
                 int colId = currentColumn + 1;
                 int rowId = currentRow + 1;
 
@@ -83,9 +92,10 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 System.out.println(id);
                 Button onePosition = new Button(this);
                 onePosition.setOnClickListener(this);
-                onePosition.setWidth(130);
-                onePosition.setHeight(130);
-                if (positions.get(id) == null)
+                onePosition.setWidth(200);
+                onePosition.setHeight(200);
+                onePosition.setOnLongClickListener(this);
+                if (positions.get(id) == null)//means no one is sitting there
                 {
                     onePosition.setText("EMPTY");
                     positions.put(id, onePosition);
@@ -94,6 +104,15 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 {
                     String name = positions.get(id).getText().toString();
                     onePosition.setText(name);
+                    String[] info = name.split(" ");
+                    if(info.length==4){
+                        if(info[3].equals("1")){
+                            onePosition.setBackgroundColor(Color.BLUE);
+                        }
+                        if(info[3].equals("2")){
+                            onePosition.setBackgroundColor(Color.CYAN);
+                        }
+                    }
                     //not sure if need to overwrite
                     positions.put(id, onePosition);
                 }
@@ -102,7 +121,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             leftRows.addView(oneRow);
 
         }
-
+    boolean foundStuff = false;
         for (int currentRow = 0; currentRow < totalRightRows; currentRow++)
         {
             LinearLayout oneRow = new LinearLayout(this);
@@ -117,8 +136,9 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 System.out.println(id);
                 Button onePosition = new Button(this);
                 onePosition.setOnClickListener(this);
-                onePosition.setWidth(130);
-                onePosition.setHeight(130);
+                onePosition.setWidth(200);
+                onePosition.setHeight(200);
+                onePosition.setOnLongClickListener(this);
                 if (positions.get(id) == null)
                 {
                     onePosition.setText("EMPTY");
@@ -128,6 +148,16 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 {
                     String name = positions.get(id).getText().toString();
                     onePosition.setText(name);
+                    foundStuff = true;
+                    String[] info = name.split(" ");
+                    if(info.length==4){
+                        if(info[3].equals("1")){
+                            onePosition.setBackgroundColor(Color.BLUE);
+                        }
+                        if(info[3].equals("2")){
+                            onePosition.setBackgroundColor(Color.CYAN);
+                        }
+                    }
                     //not sure if need to overwrite
                     positions.put(id, onePosition);
                 }
@@ -137,20 +167,21 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
 
         }
 
-        if(positions==null && !testing){
-            positions = new Hashtable<String,Button>();
+        if(!foundStuff && !testing){
+            //positions = new Hashtable<String,Button>();
             //need to get student positions from server
-            String serverResponse = networkRequest("getPositions#"+sessionID);
-            updateQueue(serverResponse);
+            String serverResponse = networkRequest("getpositions#777A01");
+            System.out.println(serverResponse+"AYYY");
+            //updateQueue(serverResponse);
         }
-        else if(positions==null){
+        else if(!foundStuff && testing){
             //format is messageType#firstname,lastname,position,queueNum#...
-            updateQueue("POSITIONS#first,last,c1r1,0#first,last,c132,1");
+            updateQueue("POSITIONS#first,last,last16,c1r1,0#first,last,last216,c1r2,1");
         }
-        else
+        else if(!testing)
         {
-            String serverResponse = networkRequest("getPositions#"+sessionID);
-            updateQueue(serverResponse);
+            String serverResponse = networkRequest("getpositions#777A01");
+            //updateQueue(serverResponse);
         }
 
         Button setupB = (Button) findViewById(R.id.setupButton);
@@ -198,7 +229,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onClick(View v)
             {
-                String toSend = "getposition#"+sessionID;
+                String toSend = "getpositions#777A01";
                 String serverResponse = "";
                 if (!testing)
                 {
@@ -206,10 +237,10 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 }
                 else
                 {
-                    serverResponse = "QUEUEPOSITIONS#first,last,c1r1,0#fennekin,fennekin,c3r3,1";
+                    serverResponse = "QUEUEPOSITIONS#first,last,last16,c1r1,0#fennekin,fennekin,fennekin16,c3r3,1";
                 }
 
-                updateQueue(serverResponse);
+                //updateQueue(serverResponse);
 
             }
         });
@@ -232,17 +263,24 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         if (response.equals("positions")){
             return;
         }
+       // positions#first,last,id,position,queuenum#...
+        //first, clear out the current queue to make way for the new one
+        Enumeration<Button> buttons = positions.elements();
+        while(buttons.hasMoreElements()){
+            Button butt = buttons.nextElement();
+            butt.setBackgroundColor(Color.GRAY);
+            butt.setText("EMPTY");
+        }
 
         String[] initSplit = response.split("#");
         for (int currentName = 1; currentName < initSplit.length; currentName++)
         {
             //first,last,c1r1,0
             String[] oneStudent = initSplit[currentName].split(",");
-            String id = oneStudent[2];
-            int queuePosition = Integer.parseInt(oneStudent[3]);
-            System.out.println(id);
-            //POSITIONS#first,last,c1r1,0#first,last,c132,1
-            positions.get(id).setText(oneStudent[0] + " " + oneStudent[1]);
+            String id = oneStudent[3];//the student's position
+            int queuePosition = Integer.parseInt(oneStudent[4]);
+            //POSITIONS#first,last,c1r1,0#first,last,c132,1 - the format of the response, supposedly
+            positions.get(id).setText(oneStudent[1] + " " + oneStudent[2] + " " + oneStudent[0]);
             switch (queuePosition)
             {
                 case 0:
@@ -252,14 +290,17 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 case 1:
                     //means first in queue
                     positions.get(id).setBackgroundColor(Color.BLUE);
+                    positions.get(id).setText(positions.get(id).getText().toString() + " 1");
                     break;
                 case 2:
                     //second, duh
                     positions.get(id).setBackgroundColor(Color.CYAN);
+                    positions.get(id).setText(positions.get(id).getText().toString() + " 2");
                     break;
                 default:
                     //3+ in queue
                     positions.get(id).setBackgroundColor(Color.GRAY);
+                    //positions.get(id).setText(positions.get(id).getText().toString() + " 3");
                     break;
             }
         }
@@ -269,9 +310,12 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public void removeFromQueue(Button butt)
     {
         //TODO check if that's the right format
-        Button name = positions.get(butt.getId());
-        String toSend = "removeFromQueue#" + name.getText();
-        String serverResponse = networkRequest(toSend);
+        String UPid = butt.getText().toString().split(" ")[2];
+        String toSend = "leavequeue#" +"777A01" + "#" + UPid;
+        if(!testing){
+            String serverResponse = networkRequest(toSend);
+        }
+        System.out.println(toSend);
 
     }
 
@@ -282,6 +326,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         {
             this.client = WebSocketHandler.getWebSocket();
         }
+
         client.send(toSend);
 
         //System.out.println("INFO-checkpointSync Button :" + toSend);
@@ -310,5 +355,15 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         this.client = WebSocketHandler.getWebSocket();
         System.out.println("onResume reached");
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        System.out.println("LONGCLICKED");
+        if(v instanceof Button){
+            Button x = (Button) v;
+            removeFromQueue(x);
+        }
+        return true;
     }
 }
