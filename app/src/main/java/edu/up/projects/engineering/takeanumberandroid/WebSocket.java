@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -16,6 +17,11 @@ public class WebSocket extends WebSocketClient
     String lastMessage = "";
     private static final String TAG = "WebSocket";
     boolean needUpdate = false;
+
+    public WebSocket(URI serverURI, Draft draft)
+    {
+        super(serverURI, draft);
+    }
 
     public WebSocket(URI serverURI)
     {
@@ -74,7 +80,7 @@ public class WebSocket extends WebSocketClient
         {
             if (remainingTries == 0)
             {
-                System.out.println("Took too long to connect to server. Exiting");
+                Log.e(TAG, "Took too long to connect to server. Exiting");
                 //System.exit(-408);
             }
 
@@ -101,7 +107,7 @@ public class WebSocket extends WebSocketClient
      */
     public void interpretMessage(String s)
     {
-        System.out.println(s);
+        Log.i(TAG, "Message received: " + s);
         String[] parms = s.split("#");
         switch (parms[0].toLowerCase().trim())
         {

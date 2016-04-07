@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
             params = client.getLastMessage();
         }
 
-        System.out.println(params);
+        Log.i(TAG, "moveToInput parameters: " + params);
         //right now, assuming it is:
         //session id#upid,firstname,lastname,1,1,1....
         String[] initSplit = params.split("#");
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                     CheckpointsActivity.checkpointSaved = new Hashtable<String, Boolean>();
                 }
                 String id = "" + firstDigit + "" + secondDigit;
-                System.out.println(id);
+                Log.i(TAG, "Checkbox ID: " + id);
                 if (currentRow[j].equals("1"))
                 {
                     CheckpointsActivity.checkpointSaved.put(id, true);
@@ -266,28 +266,24 @@ public class MainActivity extends AppCompatActivity
 //        if(!isTesting){
 //            this.client = NetworkService.getServerConnection();
 //        }
-        if(!isTesting) {
-
-
-            try {
-                client = new WebSocket(new URI("http://10.5.129.13:8080"));
-                //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            client.connect();
-            client.waitForReady();
-            client.send("identify#tablet");
-            WebSocketHandler.setWebSocket(client);
-
-            System.out.println("onResume reached");
+        try {
+            client = new WebSocket(new URI("http://10.5.129.13:8080"));
+            //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
+        client.connect();
+        client.waitForReady();
+        client.send("identify#tablet");
+        WebSocketHandler.setWebSocket(client);
+
+        Log.i(TAG, "onResume reached");
     }
 
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-        System.out.println("onDestroy() reached");
+        Log.i(TAG, "onDestroy reached");
     }
 }

@@ -148,7 +148,6 @@ public class ImportActivity extends AppCompatActivity
 
                 String labNumber = "01";//TODO lab number hardcoded for now
                 String rosterString = content;
-                //System.out.println("AYYY");
 
                 outMessage += courseId + "," + courseSection + "," + labNumber + "," + courseName + "," + numberOfCheckpoints;
                 String[] studentNames = rosterString.split("\\n");
@@ -170,7 +169,7 @@ public class ImportActivity extends AppCompatActivity
                 }
                 String[] messageParams = message.split("#");
                 String sess = messageParams[1];//TODO here's the session ID. do what you want with it.
-                System.out.print("Session ID Obtained: " + sess);
+                Log.i(TAG, "Session ID Obtained: " + sess);
                 sessionID = sess;
                 intentMain.putExtra("session", sessionID);
 
@@ -185,7 +184,7 @@ public class ImportActivity extends AppCompatActivity
         File csvFolder = new File("/sdcard/TAN");
         File[] csvList = csvFolder.listFiles();
         for(File x : csvList){
-            System.out.println(x);
+            Log.i(TAG, "File found in /sd/TAN: " + x);
         }
         if (csvList != null)
         {
@@ -234,7 +233,7 @@ public class ImportActivity extends AppCompatActivity
                 courseSection = fileName.split("-")[0].substring(5);
                 courseName = fileName.split("-")[1].split("\\.")[0];
                 content = readFile(selected2.toString());
-                System.out.println(content);
+                Log.i(TAG, "Content: " + content);
             }
             catch (Exception e)
             {
@@ -289,6 +288,6 @@ public class ImportActivity extends AppCompatActivity
         super.onResume();
         this.client = WebSocketHandler.getWebSocket();
 
-        System.out.println("onResume reached");
+        Log.i(TAG, "onResume reached");
     }
 }

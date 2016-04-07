@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +34,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     String mergeResult = "";
 
     WebSocket client = null;
-//    String host = "http://192.168.1.144:8080";
 
     //checkbox to compare when syncing
     //used to tell if the professor wants to send an "uncheck" to the server
@@ -46,7 +46,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         int dpValue = 4; // margin in dips
         float d = getResources().getDisplayMetrics().density;
-        System.out.println(d);
+        Log.d(TAG, "Screen density:" + d);
         int margin = (int)(dpValue * d); // margin in pixels
         try{
         QueueActivity2.sessionID = getIntent().getExtras().getString("session");
@@ -425,7 +425,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             }).start();
 
         }
-        System.out.println("onResume reached");
+        Log.i(TAG, "onResume reached");
     }
 
     /**

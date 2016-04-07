@@ -19,9 +19,9 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public static Hashtable<String, Button> positions;
     public static Button[] posits;
     WebSocket client = null;
-    String host = "http://192.168.1.144:8080";
     boolean testing = false;
     int[] layoutParams;
+    private static final String TAG = "QueueActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -80,7 +80,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 int rowId = currentRow + 1;
 
                 String id = "c" + currentColumn + "r" + currentRow;
-                System.out.println(id);
+                Log.i(TAG, "Seat created: " + id);
                 Button onePosition = new Button(this);
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(130);
@@ -113,8 +113,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 int rowId = currentRow;
 
                 String id = "c" + colIdOffset + "r" + currentRow;
-                System.out.println(id);
-                System.out.println(id);
+                Log.i(TAG, "Seat created: " + id);
                 Button onePosition = new Button(this);
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(130);
@@ -240,7 +239,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             String[] oneStudent = initSplit[currentName].split(",");
             String id = oneStudent[2];
             int queuePosition = Integer.parseInt(oneStudent[3]);
-            System.out.println(id);
+            Log.i(TAG, id);
             //POSITIONS#first,last,c1r1,0#first,last,c132,1
             positions.get(id).setText(oneStudent[0] + " " + oneStudent[1]);
             switch (queuePosition)
@@ -284,14 +283,14 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         }
         client.send(toSend);
 
-        //System.out.println("INFO-checkpointSync Button :" + toSend);
+        //Log.i("INFO-checkpointSync Button :" + toSend);
 
         String response = client.getLastMessage();
         while (response.equals(""))
         {
             response = client.getLastMessage();
         }
-        System.out.println(response);
+        Log.i(TAG, "Message received: " + response);
         updateQueue(response);
         client.close();
         return "";
@@ -309,6 +308,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     {
         super.onResume();
         this.client = WebSocketHandler.getWebSocket();
-        System.out.println("onResume reached");
+        Log.i(TAG, "onResume reached");
     }
 }
