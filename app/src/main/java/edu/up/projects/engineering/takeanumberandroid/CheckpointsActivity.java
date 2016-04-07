@@ -102,15 +102,15 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         }
 
 
-        try
-        {
-            QueueActivity2.layout = getIntent().getExtras().getIntArray("layout");
-        }
-        catch (NullPointerException extraNotSet)
-        {
-            //means the layout hasn't been set yet
-
-        }
+//        try
+//        {
+//            QueueActivity2.layout = getIntent().getExtras().getIntArray("layout");
+//        }
+//        catch (NullPointerException extraNotSet)
+//        {
+//            //means the layout hasn't been set yet
+//
+//        }
 
 
         setContentView(R.layout.activity_checkpoints);

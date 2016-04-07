@@ -46,8 +46,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             //as a reminder, 0 = left rows, 1 = right rows, 2 = left columns, 3 = right columns
             layout = new int[4];
             layout[0] = 5;
-            layout[1] = 5;
-            layout[2] = 4;
+            layout[1] = 4;
+            layout[2] = 5;
             layout[3] = 3;
         }
 
@@ -279,6 +279,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
        // positions#first,last,id,position,queuenum#...
         //first, clear out the current queue to make way for the new one
         Enumeration<Button> buttons = positions.elements();
+        positions.get("c0r0").setText("EMPTY");//need to do first one manually because enumeration can't get it
+        positions.get("c0r0").setBackgroundColor(Color.GRAY);
         while(buttons.hasMoreElements()){
             Button butt = buttons.nextElement();
             butt.setBackgroundColor(Color.GRAY);
@@ -313,7 +315,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 default:
                     //3+ in queue
                     positions.get(id).setBackgroundColor(Color.GRAY);
-                    //positions.get(id).setText(positions.get(id).getText().toString() + " 3");
+                    positions.get(id).setText(positions.get(id).getText().toString() + queuePosition);
                     break;
             }
         }

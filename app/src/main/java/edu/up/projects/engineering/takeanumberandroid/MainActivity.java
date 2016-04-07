@@ -102,10 +102,13 @@ public class MainActivity extends AppCompatActivity
             {
                 //preset for 206/249
                 int[] layoutParams = new int[4];
-                layoutParams[0] = 6;
-                layoutParams[1] = 6;
-                layoutParams[2] = 4;
+                //left rows, left columns, right rows, right columns
+                //TODO update others to do the right thing as well
+                layoutParams[0] = 5;
+                layoutParams[1] = 4;
+                layoutParams[2] = 5;
                 layoutParams[3] = 3;
+                QueueActivity2.layout = layoutParams;
                 moveToImport(layoutParams);
             }
         });
@@ -137,7 +140,8 @@ public class MainActivity extends AppCompatActivity
 
                 if (properFormat)
                 {
-                    int[] layouts = {leftRows, rightRows, leftColumns, rightColumns};
+                    int[] layouts = {leftRows, leftColumns, rightRows, rightColumns};
+                    QueueActivity2.layout = layouts;
                     moveToImport(layouts);
                 }
 
