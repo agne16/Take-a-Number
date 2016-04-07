@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 //        }
         try {
             client = new WebSocket(new URI("http://10.5.129.13:8080"));
-            //serverConnection = new WebSocket(new URI("http://10.5.129.13:8080"));
+            //client = new WebSocket(new URI("http://192.168.1.144:8080"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

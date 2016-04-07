@@ -442,7 +442,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         //convert into format then send to server
 
         //format is: CHECKPOINT#SESSION ID#rest
-        String toSend = "checkpointSync#777A01";//TODO Hardcoded. Will need to provide sessionId
+        String toSend = "checkpointSync#" + sessionId;//TODO make sure this behaves correctly
 
         //convert the contents into the proper format
         //format will be:

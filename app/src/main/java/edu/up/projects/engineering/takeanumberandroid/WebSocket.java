@@ -17,6 +17,7 @@ public class WebSocket extends WebSocketClient
     String lastMessage = "";
     private static final String TAG = "WebSocket";
     boolean needUpdate = false;
+    boolean needQueueUpdate = false;
 
     public WebSocket(URI serverURI, Draft draft)
     {
@@ -81,7 +82,7 @@ public class WebSocket extends WebSocketClient
             if (remainingTries == 0)
             {
                 Log.e(TAG, "Took too long to connect to server. Exiting");
-                //System.exit(-408);
+                System.exit(-408);
             }
 
             String state = this.getReadyState().toString();
@@ -120,6 +121,13 @@ public class WebSocket extends WebSocketClient
             case "checkpointsync":
                 this.lastMessage = s;
                 this.needUpdate = true;
+                break;
+            case "enterqueue":
+            case "leavequeue":
+            case "setposition":
+            case "leaveposition":
+                this.lastMessage = s;
+                this.needQueueUpdate = true;
                 break;
             case "checkpointretrieve":
                 this.lastMessage = s;

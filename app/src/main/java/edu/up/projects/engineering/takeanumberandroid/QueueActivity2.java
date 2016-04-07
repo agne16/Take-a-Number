@@ -365,7 +365,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         this.client = WebSocketHandler.getWebSocket();
         Log.i(TAG, "onResume reached");
-        System.out.println("onResume reached");
     }
 
     @Override
