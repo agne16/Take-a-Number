@@ -186,6 +186,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         for (String x : rooster)
         {
             LinearLayout column = new LinearLayout(this);
+
             column.setOrientation(LinearLayout.HORIZONTAL);
             CheckBox[] checkRow = new CheckBox[staticChecks];
             for (int i = 0; i < staticChecks; i++)

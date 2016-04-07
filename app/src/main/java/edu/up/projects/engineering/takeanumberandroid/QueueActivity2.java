@@ -94,6 +94,10 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(200);
                 onePosition.setHeight(200);
+                LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                //left, top, right, bottom margins
+                par.setMargins(0, 5, 5, 5);
+                onePosition.setLayoutParams(par);
                 onePosition.setOnLongClickListener(this);
                 if (positions.get(id) == null)//means no one is sitting there
                 {
@@ -138,6 +142,10 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 onePosition.setOnClickListener(this);
                 onePosition.setWidth(200);
                 onePosition.setHeight(200);
+                LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                //left, top, right, bottom margins
+                par.setMargins(0, 5, 5, 5);
+                onePosition.setLayoutParams(par);
                 onePosition.setOnLongClickListener(this);
                 if (positions.get(id) == null)
                 {
@@ -171,7 +179,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             //positions = new Hashtable<String,Button>();
             //need to get student positions from server
             String serverResponse = networkRequest("getpositions#777A01");
-            System.out.println(serverResponse+"AYYY");
+            System.out.println(serverResponse + "AYYY");
             //updateQueue(serverResponse);
         }
         else if(!foundStuff && testing){
