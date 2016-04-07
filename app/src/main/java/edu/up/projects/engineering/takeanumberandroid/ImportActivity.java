@@ -173,7 +173,7 @@ public class ImportActivity extends AppCompatActivity
                 sessionID = sess;
                 intentMain.putExtra("session", sessionID);
 
-                client.sendSecure("positionInit#" + sessionID + "#5,5,4,3");
+                client.sendSecure("positionInit#" + sessionID + "#" + layoutParams[0] + "," + layoutParams[1] + "," + layoutParams[2] + "," + layoutParams[3]);
 
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
@@ -203,6 +203,13 @@ public class ImportActivity extends AppCompatActivity
                     try
                     {
                         cont = readFile(xc.toString());
+                        String[] path = xc.getPath().split("/");
+                        String fileName = path[path.length - 1];
+                        courseId = fileName.split("-")[0].substring(2, 5);
+                        courseSection = fileName.split("-")[0].substring(5);
+                        courseName = fileName.split("-")[1].split("\\.")[0];
+                        content = readFile(xc.toString());
+                        Log.i(TAG, "Content: " + content);
                     }
                     catch (IOException noFile)
                     {
