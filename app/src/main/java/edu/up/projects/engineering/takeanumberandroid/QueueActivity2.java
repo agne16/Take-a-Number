@@ -76,7 +76,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         {
             positions = new Hashtable<String, Button>();
         }
-        //TODO - need to get names of students from the server
         //two loops to set up the layout of the classroom
         for (int currentRow = 0; currentRow < totalLeftRows; currentRow++)
         {
@@ -319,7 +318,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
 
     public void removeFromQueue(Button butt)
     {
-        //TODO check if that's the right format
         String UPid = butt.getText().toString().split(" ")[2];
         String toSend = "leavequeue#" +"777A01" + "#" + UPid;
         if(!testing){
@@ -363,7 +361,35 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public void onResume()
     {
         super.onResume();
-        this.client = WebSocketHandler.getWebSocket();
+        if(!MainActivity.isTesting) {
+
+            this.client = WebSocketHandler.getWebSocket();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        while (!client.needQueueUpdate) {
+                            try
+                            {
+                                Thread.sleep(100);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateQueue(client.getLastMessage());
+                            }
+                        });
+                        client.needQueueUpdate = false;
+                    }
+                }
+            }).start();
+
+        }
         Log.i(TAG, "onResume reached");
     }
 
@@ -374,6 +400,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
             Button x = (Button) v;
             removeFromQueue(x);
         }
+        client.send("getPositions#" + sessionID);
         return true;
     }
 }

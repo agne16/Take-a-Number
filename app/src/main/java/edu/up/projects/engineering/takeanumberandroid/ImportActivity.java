@@ -168,7 +168,7 @@ public class ImportActivity extends AppCompatActivity
                     message = client.getLastMessage();
                 }
                 String[] messageParams = message.split("#");
-                String sess = messageParams[1];//TODO here's the session ID. do what you want with it.
+                String sess = messageParams[1];
                 Log.i(TAG, "Session ID Obtained: " + sess);
                 sessionID = sess;
                 intentMain.putExtra("session", sessionID);

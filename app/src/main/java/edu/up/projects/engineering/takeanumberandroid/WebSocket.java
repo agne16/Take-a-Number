@@ -122,10 +122,7 @@ public class WebSocket extends WebSocketClient
                 this.lastMessage = s;
                 this.needUpdate = true;
                 break;
-            case "enterqueue":
-            case "leavequeue":
-            case "setposition":
-            case "leaveposition":
+            case "positionsync":
                 this.lastMessage = s;
                 this.needQueueUpdate = true;
                 break;

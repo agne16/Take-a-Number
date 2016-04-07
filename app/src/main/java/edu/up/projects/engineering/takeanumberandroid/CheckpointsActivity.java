@@ -414,7 +414,14 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                 public void run() {
                     while (true) {
                         while (!client.needUpdate) {
-
+                            try
+                            {
+                                Thread.sleep(100);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                e.printStackTrace();
+                            }
                         }
                         runOnUiThread(new Runnable() {
                             @Override
@@ -442,7 +449,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         //convert into format then send to server
 
         //format is: CHECKPOINT#SESSION ID#rest
-        String toSend = "checkpointSync#" + sessionId;//TODO make sure this behaves correctly
+        String toSend = "checkpointSync#" + sessionId;
 
         //convert the contents into the proper format
         //format will be:

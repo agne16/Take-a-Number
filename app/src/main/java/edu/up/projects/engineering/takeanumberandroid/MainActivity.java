@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity
                 catch (Exception invalidInt)
                 {
                     properFormat = false;
-                    // TODO: 2/5/2016  popup dialog box telling them they're bad for leaving a field empty?
                 }
 
                 if (properFormat)
