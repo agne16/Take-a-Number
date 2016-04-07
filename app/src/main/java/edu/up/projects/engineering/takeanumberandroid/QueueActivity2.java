@@ -177,7 +177,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         if(!foundStuff && !testing){
             //positions = new Hashtable<String,Button>();
             //need to get student positions from server
-            String serverResponse = networkRequest("getpositions#777A01");
+            networkRequest("getpositions#777A01");
+            String serverResponse = getServerResponse();
             System.out.println(serverResponse + "AYYY");
             //updateQueue(serverResponse);
         }
@@ -187,7 +188,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         }
         else if(!testing)
         {
-            String serverResponse = networkRequest("getpositions#777A01");
+            networkRequest("getpositions#777A01");
+            String serverResponse = getServerResponse();
             //updateQueue(serverResponse);
         }
 
@@ -240,7 +242,8 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
                 String serverResponse = "";
                 if (!testing)
                 {
-                    serverResponse = networkRequest(toSend);
+                    networkRequest(toSend);
+                    serverResponse = getServerResponse();
                 }
                 else
                 {
@@ -320,13 +323,13 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         String UPid = butt.getText().toString().split(" ")[2];
         String toSend = "leavequeue#" +"777A01" + "#" + UPid;
         if(!testing){
-            String serverResponse = networkRequest(toSend);
+            networkRequest(toSend);
         }
         System.out.println(toSend);
 
     }
 
-    public String networkRequest(String message)
+    public void networkRequest(String message)
     {
         String toSend = message;
         if (this.client == null)
@@ -335,9 +338,10 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         }
 
         client.send(toSend);
+    }
 
-        //Log.i("INFO-checkpointSync Button :" + toSend);
-
+    public String getServerResponse()
+    {
         String response = client.getLastMessage();
         while (response.equals(""))
         {

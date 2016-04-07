@@ -173,7 +173,7 @@ public class ImportActivity extends AppCompatActivity
                 sessionID = sess;
                 intentMain.putExtra("session", sessionID);
 
-                client.sendSecure("positionInit#" + sessionID + "#4,4,4,3");
+                client.sendSecure("positionInit#" + sessionID + "#5,5,4,3");
 
                 intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 ImportActivity.this.startActivity(intentMain);
