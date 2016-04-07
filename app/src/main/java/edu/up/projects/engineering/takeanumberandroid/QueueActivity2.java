@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -65,6 +66,9 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
 
         LinearLayout leftRows = (LinearLayout) findViewById(R.id.leftRows);
         LinearLayout rightRows = (LinearLayout) findViewById(R.id.rightRows);
+
+        TextView sessionTextView = (TextView) findViewById(R.id.sessionText);
+        sessionTextView.setText("Session ID: " + sessionID);
 
         //create buttons for left row
         int totalLeftRows = layout[0];
@@ -176,7 +180,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         if(!foundStuff && !testing){
             //positions = new Hashtable<String,Button>();
             //need to get student positions from server
-            networkRequest("getpositions#777A01");
+            networkRequest("getpositions#" + sessionID);
             String serverResponse = getServerResponse();
             System.out.println(serverResponse + "AYYY");
             //updateQueue(serverResponse);
@@ -187,7 +191,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         }
         else if(!testing)
         {
-            networkRequest("getpositions#777A01");
+            networkRequest("getpositions#" + sessionID);
             String serverResponse = getServerResponse();
             //updateQueue(serverResponse);
         }
@@ -319,7 +323,7 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public void removeFromQueue(Button butt)
     {
         String UPid = butt.getText().toString().split(" ")[2];
-        String toSend = "leavequeue#" +"777A01" + "#" + UPid;
+        String toSend = "leavequeue#" + sessionID + "#" + UPid;
         if(!testing){
             networkRequest(toSend);
         }
