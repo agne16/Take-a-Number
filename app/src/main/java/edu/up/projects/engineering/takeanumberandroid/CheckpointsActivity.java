@@ -27,7 +27,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     static String serverResponse = "";
     static Hashtable<String, Boolean> checkpointSaved;
     static CheckBox[][] checkList;
-   
+    static String sessionId;
 
     private static final String TAG = "CheckpointsActivity";
 
@@ -48,8 +48,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         float d = getResources().getDisplayMetrics().density;
         Log.d(TAG, "Screen density:" + d);
         int margin = (int)(dpValue * d); // margin in pixels
-        try{
-        QueueActivity2.sessionID = getIntent().getExtras().getString("session");
+        try
+        {
+            sessionId = getIntent().getExtras().getString("session");
+            QueueActivity2.sessionID = sessionId;
         }
         catch(Exception sessionIDNotSet){
         }
