@@ -26,7 +26,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
     public static Hashtable<String, Button> positions;
     public static Button[] posits;
     WebSocket client = null;
-    boolean testing = false;
     boolean testing = MainActivity.isTesting;
     int[] layoutParams;
     private static final String TAG = "QueueActivity";
@@ -346,7 +345,6 @@ public class QueueActivity2 extends AppCompatActivity implements View.OnClickLis
         }
         Log.i(TAG, "Message received: " + response);
         updateQueue(response);
-        client.close();
         return "";
     }
 
