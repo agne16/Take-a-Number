@@ -146,7 +146,7 @@ public class ImportActivity extends AppCompatActivity
                     checkpoints += ",0";
                 }
 
-                String labNumber = "01";//TODO lab number hardcoded for now
+                String labNumber = "01";//TODO lab number hardcoded for now, will eventually need to be input by professor (next year hopefully)
                 String rosterString = content;
 
                 outMessage += courseId + "," + courseSection + "," + labNumber + "," + courseName + "," + numberOfCheckpoints;

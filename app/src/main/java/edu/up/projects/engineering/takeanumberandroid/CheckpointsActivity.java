@@ -22,16 +22,13 @@ import java.util.Hashtable;
 public class CheckpointsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener
 {
 
-    static String staticRoster;
-    static int staticChecks = 5;
-    static String serverResponse = "";
-    static Hashtable<String, Boolean> checkpointSaved;
+    static String staticRoster;//a string containing the contents of the .csv file entered as the roster
+    static int staticChecks = 5;//the number of checkpoints for this lab, set to 5 by default for testing
+    static Hashtable<String, Boolean> checkpointSaved;//a saved list of checkpoints that is accessed every time the activity is loaded, so checks persist through navigation
     static CheckBox[][] checkList;
     static String sessionId;
 
     private static final String TAG = "CheckpointsActivity";
-
-    String mergeResult = "";
 
     WebSocket client = null;
 
@@ -46,8 +43,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         int dpValue = 4; // margin in dips
         float d = getResources().getDisplayMetrics().density;
-        Log.d(TAG, "Screen density:" + d);
         int margin = (int)(dpValue * d); // margin in pixels
+
         try
         {
             sessionId = getIntent().getExtras().getString("session");
@@ -55,7 +52,8 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         }
         catch(Exception sessionIDNotSet){
         }
-        if (checkpointSaved == null)
+
+        if (checkpointSaved == null)//to avoid overwriting existing checkpoint data
         {
             checkpointSaved = new Hashtable<String, Boolean>();
         }
@@ -70,7 +68,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             //there might still be an old roster stored, so don't set it unless it's null
             if (staticRoster == null)
             {
-                //placeholder
+                //placeholder, used for testing
                 //maaaaybe remove before release?
                 staticRoster = "alconcel16,Micah, Alconcel \n agne16,Teolo, Agne \n farr16,Matthew, Farr \n sohm16,Nick, Sohm \n vegdahl,Andrew, Vegdahl \n nuxoll,Steven, Nuxoll \n" +
                         " agne16,Teolo, Agne \n" +
@@ -87,7 +85,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
                         "fennekin, fennekin, fennekin \n" +
                         "fennekin, fennekin, fennekin \n" +
                         "fennekin, fennekin, fennekin \n";
-                ;
             }
         }
 
@@ -101,16 +98,6 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             //or they haven't created a lab yet
         }
 
-
-//        try
-//        {
-//            QueueActivity2.layout = getIntent().getExtras().getIntArray("layout");
-//        }
-//        catch (NullPointerException extraNotSet)
-//        {
-//            //means the layout hasn't been set yet
-//
-//        }
 
 
         setContentView(R.layout.activity_checkpoints);
@@ -128,9 +115,11 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
         LinearLayout rows = (LinearLayout) findViewById(R.id.checkRows);
 
 
+        //for reference, format of roster expected is:
+        //UP ID, first name, lastname newline...
         final String[] rooster = staticRoster.split("\\r?\\n");
         String[] studentNames = new String[rooster.length];
-        String[] studentIds = new String[rooster.length];
+        String[] studentIds = new String[rooster.length];//not currently used, but can be useful if you need student ids
         int index = 0;
         for (String x : rooster)
         {
@@ -139,27 +128,10 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             studentNames[index] = temp[1] + temp[2];
             index++;
         }
-        int botMar = 17;
-//        boolean isSmall = true;
-//            CheckBox che = (CheckBox) findViewById(R.id.smallSize);
-//        if(che == null){
-//            isSmall = false;
-//        }
-//
-//        if(!isSmall){
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-//                    this, android.R.layout.simple_list_item_1, studentNames);
-//            adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-//            theRoster.setAdapter(adapter);
-//        }
-//        else{
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                     this, R.layout.mylist, studentNames);
             adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
             theRoster.setAdapter(adapter);
-            botMar = 8;
-//        }
-
 
         //initialize it to a completely empty checkbox at the beginning
         if (lastUpdated == null)
@@ -185,6 +157,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
 
 
         checkList = new CheckBox[rooster.length][];
+        //create and draw the checkpoint list
         for (String x : rooster)
         {
             LinearLayout column = new LinearLayout(this);
@@ -194,7 +167,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             for (int i = 0; i < staticChecks; i++)
             {
                 int secondDigit = i+1;
-                String id = "" + counter + "" + secondDigit;
+                String id = "" + counter + "" + secondDigit; //counter = row, secondDigit = column
                 CheckBox check = new CheckBox(this);
                 check.setOnClickListener(this);
                 check.setOnLongClickListener(this);
@@ -277,13 +250,12 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
             }
         });
 
-
+        //converts tablet's checkpoint list into a .csv
         exportButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                //convert into csv then save to folder here
                 try
                 {
                     PrintWriter writer = new PrintWriter("/sdcard/TAN/abc.csv");
@@ -320,6 +292,7 @@ public class CheckpointsActivity extends AppCompatActivity implements AdapterVie
     }
 
     //a short click should always leave it checked
+    //assumes the only checkboxes on the page are for checkpoints
     public void onClick(View view)
     {
         if (view instanceof CheckBox)
